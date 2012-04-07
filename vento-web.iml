@@ -15,7 +15,9 @@
       <sourceFolder url="file://$MODULE_DIR$/target/generated-sources/annotations" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target/classes" />
       <excludeFolder url="file://$MODULE_DIR$/target/generated-sources/groovy-stubs" />
+      <excludeFolder url="file://$MODULE_DIR$/target/output" />
       <excludeFolder url="file://$MODULE_DIR$/target/outputReviews" />
+      <excludeFolder url="file://$MODULE_DIR$/target/rejectReviews" />
       <excludeFolder url="file://$MODULE_DIR$/target/test-classes" />
       <excludeFolder url="file://$MODULE_DIR$/target/tmp" />
     </content>

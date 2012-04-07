@@ -16,7 +16,7 @@
 
     <context:property-placeholder location="classpath:twitterCrawler.properties"/>
 
-    <camelContext xmlns="http://camel.apache.org/schema/spring">
+    <camelContext xmlns="http://camel.apache.org/schema/spring" autoStartup="false">
         <!--properties>
             <property key="http.proxyHost" value="proxylb.internal.epo.org"/>
             <property key="http.proxyPort" value="80"/>

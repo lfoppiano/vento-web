@@ -14,7 +14,7 @@ import org.vento.crawler.processor.TwitterPreprocessor;
 import java.io.InputStream;
 import java.util.UUID;
 
-public class CrawlerRouteTest extends CamelTestSupport {
+public class TwitterCrawlerRouteTest extends CamelTestSupport {
 
     @Produce(uri = "direct:start")
     protected ProducerTemplate template;

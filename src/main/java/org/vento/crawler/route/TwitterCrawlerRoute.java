@@ -18,21 +18,33 @@ import java.util.UUID;
  * To change this template use File | Settings | File Templates.
  */
 
-public class CrawlerRoute extends RouteBuilder {
+public class TwitterCrawlerRoute extends RouteBuilder {
+
+
+    @EndpointInject(ref = "sourceFileQuery")
+    private Endpoint sourceFileQuery;
+
+    @EndpointInject(ref = "queryQueue")
+    private Endpoint queryQueue;
 
     @EndpointInject(ref = "outputDirectory")
     private Endpoint outputDirectory;
 
-    @EndpointInject(ref = "queryQueue")
-    private Endpoint queryQueue2;
-
     public void configure(){
 
         TwitterPreprocessor twitterPreprocessor = new TwitterPreprocessor();
-
-        from(queryQueue2)
+        from(sourceFileQuery)
                 .autoStartup(false)
-                .to("log:httpQuery?level=INFO&showHeaders=true")
+                .routeId("TwitterUrlBuilder")
+                .split().tokenize("\n")
+                .loop(15).copy()
+                .transform(body().append(simple("&page=${header.CamelLoopIndex}++")))
+                .to(queryQueue);
+
+        from(queryQueue)
+                .autoStartup(false)
+                .routeId("TwitterCrawler")
+                //.to("log:httpQuery?level=INFO&showHeaders=true")
                 .setHeader(Exchange.HTTP_METHOD, constant("GET"))
                 .setHeader(Exchange.HTTP_QUERY, simple("q=${body}&lang=en&rpp=100"))
                 .to("http://search.twitter.com/search.json")
@@ -40,7 +52,7 @@ public class CrawlerRoute extends RouteBuilder {
                 .process(twitterPreprocessor)
                 .split().xpath("//twits/twit").streaming()
                 .convertBodyTo(Twit.class)
-                .to("log:QueryValue?level=INFO&showHeaders=true")
+                //.to("log:QueryValue?level=INFO&showHeaders=true")
                 .setHeader("CamelFileName").simple(UUID.randomUUID().toString())
                 .to(outputDirectory);
 

@@ -194,7 +194,7 @@
                     <stopKey/>
                     <stopPort/>
                     <webAppConfig>
-                        <contextPath>/</contextPath>
+                        <contextPath>/vento</contextPath>
                     </webAppConfig>
 
                     <systemProperties>

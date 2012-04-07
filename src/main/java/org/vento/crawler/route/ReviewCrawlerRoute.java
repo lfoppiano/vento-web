@@ -42,6 +42,7 @@ public class ReviewCrawlerRoute extends RouteBuilder {
         onException(java.net.SocketException.class).maximumRedeliveries(5).redeliveryDelay(3000);
 
         from(sourceFileReview)
+                .routeId("ReviewsUrlPreparation")
                 .split().tokenize("\n")
                 .enrich("direct:enrich", amazonReviewAggregationStrategy)
                 .log("Product: ${body} - maxPageNumber: ${header.maxPageNumber} ")
@@ -50,6 +51,7 @@ public class ReviewCrawlerRoute extends RouteBuilder {
                 .to("seda:review");
 
         from("direct:enrich")
+                .routeId("ReviewsPageCalculation")
                 .setHeader(Exchange.HTTP_METHOD, constant("GET"))
                 .setHeader(Exchange.HTTP_PATH, body())
                 .to("http://www.amazon.com")
@@ -57,6 +59,7 @@ public class ReviewCrawlerRoute extends RouteBuilder {
                 .process(amazonReviewPageCalculatorProcessor);
 
         from("seda:review?concurrentConsumers=21")
+                .routeId("ReviewsCrawler")
                 .setHeader(Exchange.HTTP_METHOD, constant("GET"))
                 .setHeader(Exchange.HTTP_PATH, body())
                 .to("http://www.amazon.com/")
