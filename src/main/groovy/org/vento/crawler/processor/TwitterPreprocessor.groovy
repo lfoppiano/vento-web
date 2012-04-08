@@ -14,7 +14,7 @@ public class TwitterPreprocessor implements Processor {
         def resultJson = new JsonSlurper().parseText(json)
 
         def root = new Twits()
-        println exchange.getIn().getMessageId()
+        //println exchange.getIn().getMessageId()
 
         root.twits = new ArrayList<Twit>();
 

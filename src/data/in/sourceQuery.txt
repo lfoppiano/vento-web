@@ -1,2 +1,6 @@
 microsoft
 facebook
+nike
+lotus
+ferrari
+fiat
