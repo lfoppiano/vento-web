@@ -58,6 +58,7 @@ public class AmazonReviewProcessorTest {
         def sum = 0
         assert output.twits.each{ Twit twit ->
             sum += twit.getText().count('<br />')
+            println twit.getScore()
         }
 
         assert sum == 0

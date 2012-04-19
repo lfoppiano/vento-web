@@ -45,6 +45,14 @@ public class AmazonReviewProcessor implements Processor {
                 //review.text = reviewText
                 review.score = score
 
+                if (['1.0', '2.0'].contains(review.score)) {
+                    review.score = '1.0'
+                }else if(['4.0', '5.0'].contains(review.score)) {
+                    review.score = '3.0'
+                }else if(review.score == '3.0'){
+                    review.score = '2.0'
+                }
+
                 //println "[${review.score}] ${review.text}"
                 reviews.twits.add(review)
 
