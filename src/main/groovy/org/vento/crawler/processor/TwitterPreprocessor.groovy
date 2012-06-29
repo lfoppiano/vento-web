@@ -21,7 +21,7 @@ public class TwitterPreprocessor implements Processor {
         resultJson.results.each{ result ->
             def twit = new Twit()
             twit.query = resultJson.query
-            twit.text = result.text
+            twit.text = textProcessing(result.text)
             twit.id = result.id_str
             twit.createdAt = result.created_at
             twit.fromUserIdStr = result.from_user_id_str
@@ -34,4 +34,16 @@ public class TwitterPreprocessor implements Processor {
         }
         exchange.getOut().setBody(root)
     }
+
+    private String textProcessing(String text) {
+        text = text.replaceAll(/@\w+/, '')
+        text = text.replaceAll(/#\w+/, '')
+        text = text.replaceAll(/[;:8](-)?[)(P]/, '')
+
+        text = text.replaceAll(/\s\s/, / /)
+        text = text.trim()
+
+        return text
+    }
+
 }

@@ -215,7 +215,7 @@
     </build>
 
     <properties>
-        <camel.version>2.9.1</camel.version>
+        <camel.version>2.9.2</camel.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jetty-version>7.1.6.v20100715</jetty-version>
         <xbean-spring-version>3.5</xbean-spring-version>
