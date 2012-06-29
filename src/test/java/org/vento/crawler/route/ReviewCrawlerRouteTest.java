@@ -43,7 +43,7 @@ public class ReviewCrawlerRouteTest extends CamelTestSupport {
     protected MockEndpoint mock_output;
 
 
-    @Test
+
     public void testMessageSplitAndQueryPreparation() throws Exception {
 
         InputStream sourceFileReview = this.getClass().getResourceAsStream("sourceFileReviews.txt");
@@ -91,7 +91,7 @@ public class ReviewCrawlerRouteTest extends CamelTestSupport {
 //        assertEquals(expected, lastMessage);
     }*/
 
-    @Test
+
     public void testReviewExtraction() throws Exception {
 
         InputStream responseExample = this.getClass().getResourceAsStream("example.response.amazon.review.html");
@@ -115,7 +115,7 @@ public class ReviewCrawlerRouteTest extends CamelTestSupport {
 
     }
 
-    @Test
+
     public void testInvalidCharTreatment() throws Exception {
 
         InputStream errorExample = this.getClass().getResourceAsStream("amazon.response.invalid.char.html");

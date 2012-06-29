@@ -29,7 +29,7 @@ public class TwitterCrawlerRouteTest extends CamelTestSupport {
     protected MockEndpoint mockOutput;
 
 
-    @Test
+/*    @Test
     public void testTwitterMessageMassaging() throws Exception {
         InputStream body = getClass().getResourceAsStream("../processor/twitter-response-body.json");
         assertNotNull(body);
@@ -38,7 +38,7 @@ public class TwitterCrawlerRouteTest extends CamelTestSupport {
         templateTwitterResponse.sendBody(body);
 
         assertMockEndpointsSatisfied();
-    }
+    }*/
 
     @Override
     protected RouteBuilder createRouteBuilder() throws Exception {

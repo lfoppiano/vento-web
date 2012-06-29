@@ -50,7 +50,6 @@ public class TwitterCrawlerRoute extends RouteBuilder {
 
         TwitterPreprocessor twitterPreprocessor = new TwitterPreprocessor();
         from(sourceFileQuery)
-                .autoStartup(false)
                 .routeId("TwitterUrlBuilder")
                 .split().tokenize("\n")
                 .loop(15).copy()
@@ -58,7 +57,6 @@ public class TwitterCrawlerRoute extends RouteBuilder {
                 .to("seda:queryQueue");
 
         from("seda:queryQueue?concurrentConsumers=3")
-                .autoStartup(false)
                 .routeId("TwitterCrawler")
                 //.to("log:httpQuery?level=INFO&showHeaders=true")
                 .setHeader(Exchange.HTTP_METHOD, constant("GET"))
