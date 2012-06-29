@@ -6,6 +6,7 @@ import org.apache.camel.Exchange
 import org.apache.camel.Processor
 import org.vento.model.Twit
 import org.vento.model.Twits
+import org.vento.amazon.utility.StringProcessor
 
 public class TwitterPreprocessor implements Processor {
     public void process(Exchange exchange) throws Exception {
@@ -41,6 +42,7 @@ public class TwitterPreprocessor implements Processor {
         text = text.replaceAll(/[;:8](-)?[)(P]/, '')
 
         text = text.replaceAll(/\s\s/, / /)
+        text = StringProcessor.removeInvalidUtf8Chars(text)
         text = text.trim()
 
         return text

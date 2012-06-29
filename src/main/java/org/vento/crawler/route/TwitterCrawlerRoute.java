@@ -7,6 +7,7 @@ import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
 import org.vento.crawler.processor.TwitterPreprocessor;
 import org.vento.model.Twit;
+import org.vento.model.Twits;
 
 import java.util.UUID;
 
@@ -64,6 +65,7 @@ public class TwitterCrawlerRoute extends RouteBuilder {
                 .to("http://search.twitter.com/search.json?httpClient.cookiePolicy=ignoreCookies")
                 .convertBodyTo(String.class, "UTF-8")
                 .process(twitterPreprocessor)
+                .convertBodyTo(Twits.class)
                 .split().xpath("//twits/twit").streaming()
                 .convertBodyTo(Twit.class)
                 //.to("log:QueryValue?level=INFO&showHeaders=true")
