@@ -10,10 +10,6 @@
                   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
                   http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
 
-    <!--   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd">
--->
-
     <context:property-placeholder location="classpath:twitterCrawler.properties"/>
 
     <camelContext xmlns="http://camel.apache.org/schema/spring" autoStartup="false">
