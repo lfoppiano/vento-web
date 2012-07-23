@@ -9,6 +9,7 @@ import org.vento.crawler.processor.TwitterPreprocessor;
 import org.vento.model.Twit;
 import org.vento.model.Twits;
 
+import java.io.File;
 import java.util.UUID;
 
 
@@ -49,7 +50,8 @@ public class TwitterCrawlerRoute extends RouteBuilder {
                 .maximumRedeliveries(5)
                 .redeliveryDelay(5000);
 
-        TwitterPreprocessor twitterPreprocessor = new TwitterPreprocessor();
+        //TwitterPreprocessor twitterPreprocessor = new TwitterPreprocessor();
+
         from(sourceFileQuery)
                 .routeId("TwitterUrlBuilder")
                 .split().tokenize("\n")
@@ -57,18 +59,19 @@ public class TwitterCrawlerRoute extends RouteBuilder {
                 .transform(body().append(simple("&page=${header.CamelLoopIndex}++")))
                 .to("seda:queryQueue");
 
-        from("seda:queryQueue?concurrentConsumers=3")
+        from("seda:queryQueue?concurrentConsumers=1")
                 .routeId("TwitterCrawler")
                 //.to("log:httpQuery?level=INFO&showHeaders=true")
                 .setHeader(Exchange.HTTP_METHOD, constant("GET"))
                 .setHeader(Exchange.HTTP_QUERY, simple("q=${body}&lang=en&rpp=100"))
                 .to("http://search.twitter.com/search.json?httpClient.cookiePolicy=ignoreCookies")
                 .convertBodyTo(String.class, "UTF-8")
-                .process(twitterPreprocessor)
+                .processRef("twitterPreprocessor")
                 .convertBodyTo(Twits.class)
                 .split().xpath("//twits/twit").streaming()
-                .convertBodyTo(Twit.class)
+                .convertBodyTo(String.class)
                 //.to("log:QueryValue?level=INFO&showHeaders=true")
+                .processRef("gateClassifierProcessor")
                 .setHeader("CamelFileName").simple(UUID.randomUUID().toString())
                 .to(outputDirectory);
 
