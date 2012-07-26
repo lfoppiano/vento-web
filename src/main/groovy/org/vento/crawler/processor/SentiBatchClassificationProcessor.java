@@ -2,6 +2,7 @@ package org.vento.crawler.processor;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
+import org.vento.gate.SimpleBatchClassification;
 import org.vento.model.Twit;
 import org.vento.semantic.sentiment.SentiBatchClassificationImpl;
 
@@ -19,12 +20,12 @@ import java.io.IOException;import java.lang.*;import java.lang.Exception;import 
  */
 public class SentiBatchClassificationProcessor implements Processor {
 
-    private SentiBatchClassificationImpl classifier;
+    private SimpleBatchClassification classifier;
 
     @Override
     public void process(Exchange exchange) throws Exception {
         String input = (String) exchange.getIn().getBody();
-        BufferedWriter out = null;
+        /*BufferedWriter out = null;
         File temp = null;
 
         try {
@@ -43,8 +44,8 @@ public class SentiBatchClassificationProcessor implements Processor {
         } finally {
             out.close();
         }
-
-        Double result = classifier.simpleClassify(temp, "UTF-8", "text/xml");
+*/
+        Double result = classifier.simpleClassify(input);
 
         //System.out.println("RESULT "+result.toString());
 
@@ -55,11 +56,11 @@ public class SentiBatchClassificationProcessor implements Processor {
         exchange.getIn().setBody(twit);
     }
 
-    public SentiBatchClassificationImpl getClassifier() {
+    public SimpleBatchClassification getClassifier() {
         return classifier;
     }
 
-    public void setClassifier(SentiBatchClassificationImpl classifier) {
+    public void setClassifier(SimpleBatchClassification classifier) {
         this.classifier = classifier;
     }
 }

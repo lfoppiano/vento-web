@@ -14,15 +14,9 @@
 
     <bean id="twitterPreprocessor" class="org.vento.crawler.processor.TwitterPreprocessor" />
     <bean id="gateClassifier" class="org.vento.semantic.sentiment.SentiBatchClassificationImpl">
-        <constructor-arg index="0" type="java.lang.String"> <!--Gate home-->
-            <value>/Applications/GATE_Developer_7.0</value>
-        </constructor-arg> <!-- gate config file -->
-        <constructor-arg index="1" type="java.lang.String">
-            <value>/tmp/gate/batch-learning.classification.configuration.xml</value>
-        </constructor-arg>
-        <constructor-arg index="2" type="java.lang.String"> <!-- corpus name -->
-            <value>classificationTestCorpus</value>
-        </constructor-arg>
+        <property name="gateHome" value="/Applications/GATE_Developer_7.0" />
+        <property name="gateConfigFile"  value="/opt/local/gate/batch-learning.classification.configuration.xml" />
+        <property name="corpusName" value="classificationTestCorpus" />
     </bean>
     <bean id="gateClassifierProcessor" class="org.vento.crawler.processor.SentiBatchClassificationProcessor">
         <property name="classifier" ref="gateClassifier"/>
