@@ -57,7 +57,7 @@ public class TwitterCrawlerRoute extends RouteBuilder {
                 .transform(body().append(simple("&page=${header.CamelLoopIndex}++")))
                 .to("seda:queryQueue");
 
-        from("seda:queryQueue?concurrentConsumers=3")
+        from("seda:queryQueue?concurrentConsumers=1")
                 .routeId("TwitterCrawler")
                 //.to("log:httpQuery?level=INFO&showHeaders=true")
                 .setHeader(Exchange.HTTP_METHOD, constant("GET"))
