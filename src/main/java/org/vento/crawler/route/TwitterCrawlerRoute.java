@@ -69,7 +69,7 @@ public class TwitterCrawlerRoute extends RouteBuilder {
                 .split().xpath("//twits/twit").streaming()
                 .convertBodyTo(String.class)
                 //.to("log:QueryValue?level=INFO&showHeaders=true")
-                //.processRef("gateClassifierProcessor")
+                .processRef("gateClassifierProcessor")
                 .processRef("simpleClassifierProcessor")
                 .setHeader("CamelFileName").simple(UUID.randomUUID().toString())
                 .to(outputDirectory);
