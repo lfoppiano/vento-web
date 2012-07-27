@@ -24,7 +24,7 @@ public class SentiBatchClassificationProcessor implements Processor {
 
     @Override
     public void process(Exchange exchange) throws Exception {
-        String input = (String) exchange.getIn().getBody();
+        //String input = (String) exchange.getIn().getBody();
         /*
         BufferedWriter out = null;
         File temp = null;
@@ -46,11 +46,10 @@ public class SentiBatchClassificationProcessor implements Processor {
             out.close();
         }
 */
-        Double result = classifier.simpleClassify(input);
-
-        //System.out.println("RESULT "+result.toString());
 
         Twit twit = exchange.getIn().getBody(Twit.class);
+
+        Double result = classifier.simpleClassify(twit.getText());
 
         twit.setScore(result.toString());
 

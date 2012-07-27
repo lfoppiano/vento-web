@@ -57,7 +57,7 @@ public class TwitterCrawlerRoute extends RouteBuilder {
                 .transform(body().append(simple("&page=${header.CamelLoopIndex}++")))
                 .to("seda:queryQueue");
 
-        from("seda:queryQueue?concurrentConsumers=1")
+        from("seda:queryQueue?concurrentConsumers=3")
                 .routeId("TwitterCrawler")
                 //.to("log:httpQuery?level=INFO&showHeaders=true")
                 .setHeader(Exchange.HTTP_METHOD, constant("GET"))
@@ -69,7 +69,7 @@ public class TwitterCrawlerRoute extends RouteBuilder {
                 .split().xpath("//twits/twit").streaming()
                 .convertBodyTo(String.class)
                 //.to("log:QueryValue?level=INFO&showHeaders=true")
-                //.processRef("gateClassifierProcessor")
+                .processRef("gateClassifierProcessor")
                 .processRef("simpleClassifierProcessor")
                 .setHeader("CamelFileName").simple(UUID.randomUUID().toString())
                 .to(outputDirectory);
