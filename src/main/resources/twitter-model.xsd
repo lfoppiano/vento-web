@@ -45,6 +45,8 @@
             <xs:element name="query" type="xs:string" minOccurs="0"/>
             <xs:element name="from_user" type="xs:string" minOccurs="0"/>
             <xs:element name="score" type="xs:string" minOccurs="0" />
+            <!-- To use as score with manually classified twits -->
+            <xs:element name="reference_score" type="xs:string" minOccurs="0" />
             <!-- timestamp to make it required, in future -->
             <xs:element name="created_at" type="xs:string" minOccurs="0"/>
         </xs:sequence>

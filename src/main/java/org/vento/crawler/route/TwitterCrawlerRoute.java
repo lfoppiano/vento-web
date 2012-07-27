@@ -50,8 +50,6 @@ public class TwitterCrawlerRoute extends RouteBuilder {
                 .maximumRedeliveries(5)
                 .redeliveryDelay(5000);
 
-        //TwitterPreprocessor twitterPreprocessor = new TwitterPreprocessor();
-
         from(sourceFileQuery)
                 .routeId("TwitterUrlBuilder")
                 .split().tokenize("\n")
@@ -71,7 +69,8 @@ public class TwitterCrawlerRoute extends RouteBuilder {
                 .split().xpath("//twits/twit").streaming()
                 .convertBodyTo(String.class)
                 //.to("log:QueryValue?level=INFO&showHeaders=true")
-                .processRef("gateClassifierProcessor")
+                //.processRef("gateClassifierProcessor")
+                .processRef("simpleClassifierProcessor")
                 .setHeader("CamelFileName").simple(UUID.randomUUID().toString())
                 .to(outputDirectory);
 

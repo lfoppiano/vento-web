@@ -25,7 +25,8 @@ public class SentiBatchClassificationProcessor implements Processor {
     @Override
     public void process(Exchange exchange) throws Exception {
         String input = (String) exchange.getIn().getBody();
-        /*BufferedWriter out = null;
+        /*
+        BufferedWriter out = null;
         File temp = null;
 
         try {
