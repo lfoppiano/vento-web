@@ -70,6 +70,12 @@
             <version>${camel.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-mongodb</artifactId>
+            <version>${camel.version}</version>
+        </dependency>
+
         <!-- endpoints -->
         <dependency>
             <groupId>org.apache.camel</groupId>

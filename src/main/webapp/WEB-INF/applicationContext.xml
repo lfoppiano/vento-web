@@ -5,6 +5,7 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mongo="http://www.springframework.org/schema/data/mongo"
        xsi:schemaLocation="
                   http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
@@ -32,6 +33,12 @@
         <property name="classifier" ref="simpleClassifier"/>
     </bean>
 
+    <bean id="mongoDb" class="com.mongodb.Mongo">
+        <constructor-arg index="0" name="host" value="localhost" />
+        <constructor-arg index="1" name="port" value="27017" />
+    </bean>
+
+
     <camelContext xmlns="http://camel.apache.org/schema/spring" autoStartup="false">
         <!--properties>
             <property key="http.proxyHost" value="proxylb.internal.epo.org"/>
@@ -45,7 +52,9 @@
 
         <endpoint id="sourceFileQuery" uri="file:${input.dir}?fileName=sourceQuery.txt&amp;noop=true&amp;idempotent=false&amp;delay=60000"/>
         <endpoint id="rejectTwitterLocation" uri="file:${reject.dir}?fileName=twitter-reject-$simple{date:now:yyMMddHHmmssSSSS}.xml" />
-        <endpoint id="outputDirectory" uri="file:${output.dir}?fileName=twitter-output-$simple{date:now:yyMMddHHmmssSSSS}.xml" />
+        <!--<endpoint id="outputDirectory" uri="file:${output.dir}?fileName=twitter-output-$simple{date:now:yyMMddHHmmssSSSS}.xml" />-->
+        <endpoint id="outputDirectory" uri="mongodb:mongoDb?database=vento&amp;collection=reports&amp;operation=insert" />
+
         <endpoint id="outputQueue" uri="${outputQueue.uri}" />
 
         <endpoint id="sourceFileReviews" uri="file:${inputReviews.dir}?fileName=sourceFileReviews.txt&amp;noop=true" />
