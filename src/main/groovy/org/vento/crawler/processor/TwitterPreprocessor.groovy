@@ -36,12 +36,21 @@ public class TwitterPreprocessor implements Processor {
     }
 
     private String textProcessing(String text) {
+        //Remove recipients
         text = text.replaceAll(/@\w+/, '')
+        //Remove tags
         text = text.replaceAll(/#\w+/, '')
+        //Remove emoticons
         text = text.replaceAll(/[;:8](-)?[)(P]/, '')
-
-        text = text.replaceAll(/\s\s/, / /)
+        //Double space to space
+        text = text.replaceAll(/\s\s/, ' ')
+        //Remove links/urls
+        text = text.replaceAll(/http:\/\/[a-zA-Z0-9\/-=.:]+/, '')
+        //Remove retweets
+        text = text.replaceAll(/^?RT\s?:/, '')
+        //Remove invalid characters
         text = StringProcessor.removeInvalidUtf8Chars(text)
+
         text = text.trim()
 
         return text
