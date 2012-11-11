@@ -1,32 +1,24 @@
 Camel Router WAR Project with Web Console and REST Support
 ==========================================================
 
-This project bundles the Camel Web Console, REST API, and some
-sample routes as a WAR. You can build the WAR by running
+This route should be run with at least 1024MB of heap space and 256 Mb
+of PermGenSpace
 
-mvn install
+MAVEN_OPTS=-Xmx1024m -XX:MaxPermSize=256m
 
-You can then run the project by dropping the WAR into your 
-favorite web container or just run
+To configure GATE you have to copy the files (from the gate-senti-brain):
 
-mvn jetty:run
+test/resources/gate-project-classification/copy_comment_spans.jape
+test/resources/gate-project-classification/annotationGrammar.jape
+test/resources/gate-project-classification/batch-learning.classification.configuration.xml
+test/resources/org/vento/semantic/sentiment/negative_adj_list.txt
+test/resources/org/vento/semantic/sentiment/positive_adj_list.txt
 
-to start up and deploy to Jetty.
+into
+/opt/local/gate
 
+and
+test/resources/vento-senti-brain
 
-Web Console
-===========
-
-You can view the Web Console by pointing your browser to http://localhost:8080/
-
-You should be able to do things like
-
-    * browse the available endpoints
-    * browse the messages on an endpoint if it is a BrowsableEndpoint
-    * send a message to an endpoint
-    * create new endpoints
-
-For more help see the Apache Camel documentation
-
-    http://camel.apache.org/
-    
+into
+/opt/local/vento-senti-brain (check the permission, this should be writeable)
