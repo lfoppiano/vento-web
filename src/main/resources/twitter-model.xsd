@@ -35,7 +35,7 @@
     <!-- TODO: rename it to make it more generic -->
     <xs:complexType name="Twit">
         <xs:sequence>
-            <xs:element name="id" type="xs:string" />
+            <xs:element name="twitter_id" type="xs:string" />
             <xs:element name="text" type="xs:string" />
             <xs:element name="geo" type="xs:string" minOccurs="0"/>
             <xs:element name="to_user_id_str" type="xs:string" minOccurs="0"/>

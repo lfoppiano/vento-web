@@ -35,7 +35,7 @@ public class TwitterPreprocessorTest {
         assert body != null
 
         assert body.twits.size() == 15
-        assert body.twits.get(0).id == '123505817893863425'
+        assert body.twits.get(0).twitterId == '123505817893863425'
         assert body.twits.get(14).text == 'My better is better than your better'
     }
 }

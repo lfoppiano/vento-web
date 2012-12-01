@@ -20,9 +20,9 @@ public class TwitterPreprocessor implements Processor {
 
         resultJson.results.each{ result ->
             def twit = new Twit()
+            twit.twitterId = result.id_str
             twit.query = resultJson.query
             twit.text = textProcessing(result.text)
-            twit.id = result.id_str
             twit.createdAt = result.created_at
             twit.fromUserIdStr = result.from_user_id_str
             twit.toUserIdStr = result.to_user_id_str
