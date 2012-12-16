@@ -52,7 +52,7 @@
         <endpoint id="sourceFileQuery" uri="file:${input.dir}?fileName=sourceQuery.txt&amp;noop=true&amp;idempotent=false&amp;delay=60000"/>
         <endpoint id="rejectTwitterLocation" uri="file:${reject.dir}?fileName=twitter-reject-$simple{date:now:yyMMddHHmmssSSSS}.xml" />
         <!--<endpoint id="outputDirectory" uri="file:${output.dir}?fileName=twitter-output-$simple{date:now:yyMMddHHmmssSSSS}.xml" />-->
-        <endpoint id="outputDirectory" uri="mongodb:mongoDb?database=vento&amp;collection=reports&amp;operation=insert" />
+        <endpoint id="outputDirectory" uri="${output.dir}" />
 
         <endpoint id="outputQueue" uri="${outputQueue.uri}" />
 

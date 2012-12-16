@@ -1,15 +1,19 @@
 package org.vento.crawler.route;
 
-import org.apache.camel.Endpoint;
-import org.apache.camel.EndpointInject;
-import org.apache.camel.Exchange;
-import org.apache.camel.LoggingLevel;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
+import org.apache.camel.*;
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.processor.idempotent.FileIdempotentRepository;
+import org.apache.camel.processor.idempotent.MemoryIdempotentRepository;
+import org.bson.BSONObject;
 import org.vento.crawler.processor.TwitterPreprocessor;
 import org.vento.model.Twit;
 import org.vento.model.Twits;
 
 import java.io.File;
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 
@@ -57,7 +61,7 @@ public class TwitterCrawlerRoute extends RouteBuilder {
                 .transform(body().append(simple("&page=${header.CamelLoopIndex}++")))
                 .to("seda:queryQueue");
 
-        from("seda:queryQueue?concurrentConsumers=1")
+        from("seda:queryQueue?concurrentConsumers=2")
                 .routeId("TwitterCrawler")
                 //.to("log:httpQuery?level=INFO&showHeaders=true")
                 .setHeader(Exchange.HTTP_METHOD, constant("GET"))
@@ -67,10 +71,32 @@ public class TwitterCrawlerRoute extends RouteBuilder {
                 .processRef("twitterPreprocessor")
                 .convertBodyTo(Twits.class)
                 .split().xpath("//twits/twit").streaming()
-                .convertBodyTo(String.class)
+                .convertBodyTo(Twit.class)
+                .process(new Processor() {
+                    @Override
+                    public void process(Exchange exchange) throws Exception {
+                        Message exchangeIn = exchange.getIn();
+                        exchangeIn.setHeader("twitterId", ((Twit) exchangeIn.getBody()).getTwitterId());
+                    }
+                })
+                //.convertBodyTo(String.class)
                 //.to("log:QueryValue?level=INFO&showHeaders=true")
-                .processRef("gateClassifierProcessor")
-                .processRef("simpleClassifierProcessor")
+                //.processRef("gateClassifierProcessor")
+                //.processRef("simpleClassifierProcessor")
+                /*.process(new Processor() {
+                    @Override
+                    public void process(Exchange exchange) throws Exception {
+                        Twit bodyIn = (Twit) exchange.getIn().getBody();
+
+                        DBObject dbObject = new BasicDBObject();
+                        dbObject.put("_id", bodyIn.getId());
+                        dbObject.put("text", bodyIn.getText());
+
+                        exchange.getIn().setBody(dbObject);
+                    }
+                })*/
+                .idempotentConsumer(header("twitterId"), MemoryIdempotentRepository.memoryIdempotentRepository(10000))
+                //.idempotentConsumer(header("twitterId"), FileIdempotentRepository.fileIdempotentRepository(new File("file:///tmp/twitter/idempotent")))
                 .setHeader("CamelFileName").simple(UUID.randomUUID().toString())
                 .to(outputDirectory);
 
