@@ -61,7 +61,7 @@ public class TwitterCrawlerRoute extends RouteBuilder {
                 .transform(body().append(simple("&page=${header.CamelLoopIndex}++")))
                 .to("seda:queryQueue");
 
-        from("seda:queryQueue?concurrentConsumers=2")
+        from("seda:queryQueue?concurrentConsumers=1")
                 .routeId("TwitterCrawler")
                 //.to("log:httpQuery?level=INFO&showHeaders=true")
                 .setHeader(Exchange.HTTP_METHOD, constant("GET"))
@@ -79,6 +79,8 @@ public class TwitterCrawlerRoute extends RouteBuilder {
                         exchangeIn.setHeader("twitterId", ((Twit) exchangeIn.getBody()).getTwitterId());
                     }
                 })
+                .to("direct:flight");
+
                 //.convertBodyTo(String.class)
                 //.to("log:QueryValue?level=INFO&showHeaders=true")
                 //.processRef("gateClassifierProcessor")
@@ -95,7 +97,8 @@ public class TwitterCrawlerRoute extends RouteBuilder {
                         exchange.getIn().setBody(dbObject);
                     }
                 })*/
-                .idempotentConsumer(header("twitterId"), MemoryIdempotentRepository.memoryIdempotentRepository(10000))
+                from("direct:flight")
+                .idempotentConsumer(header("twitterId"), MemoryIdempotentRepository.memoryIdempotentRepository(1000000))
                 //.idempotentConsumer(header("twitterId"), FileIdempotentRepository.fileIdempotentRepository(new File("file:///tmp/twitter/idempotent")))
                 .setHeader("CamelFileName").simple(UUID.randomUUID().toString())
                 .to(outputDirectory);
