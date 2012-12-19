@@ -1,19 +1,12 @@
 package org.vento.crawler.route;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import org.apache.camel.*;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.processor.idempotent.FileIdempotentRepository;
+import org.apache.camel.component.mongodb.MongoDbConstants;
 import org.apache.camel.processor.idempotent.MemoryIdempotentRepository;
-import org.bson.BSONObject;
-import org.vento.crawler.processor.TwitterPreprocessor;
 import org.vento.model.Twit;
 import org.vento.model.Twits;
 
-import java.io.File;
-import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 
 
@@ -37,7 +30,7 @@ public class TwitterCrawlerRoute extends RouteBuilder {
     @EndpointInject(ref = "rejectTwitterLocation")
     private Endpoint twitterRejectEndpoint;
 
-    public void configure(){
+    public void configure() {
 
         errorHandler(
                 deadLetterChannel(twitterRejectEndpoint)
@@ -48,7 +41,7 @@ public class TwitterCrawlerRoute extends RouteBuilder {
                 .retryAttemptedLogLevel(LoggingLevel.WARN)
                 .maximumRedeliveries(5)
                 .redeliveryDelay(5000);
-        
+
         onException(org.apache.commons.httpclient.NoHttpResponseException.class)
                 .retryAttemptedLogLevel(LoggingLevel.WARN)
                 .maximumRedeliveries(5)
@@ -63,7 +56,7 @@ public class TwitterCrawlerRoute extends RouteBuilder {
 
         from("seda:queryQueue?concurrentConsumers=1")
                 .routeId("TwitterCrawler")
-                //.to("log:httpQuery?level=INFO&showHeaders=true")
+                        //.to("log:httpQuery?level=INFO&showHeaders=true")
                 .setHeader(Exchange.HTTP_METHOD, constant("GET"))
                 .setHeader(Exchange.HTTP_QUERY, simple("q=${body}&lang=en&rpp=100"))
                 .to("http://search.twitter.com/search.json?httpClient.cookiePolicy=ignoreCookies")
@@ -81,27 +74,34 @@ public class TwitterCrawlerRoute extends RouteBuilder {
                 })
                 .to("direct:flight");
 
-                //.convertBodyTo(String.class)
-                //.to("log:QueryValue?level=INFO&showHeaders=true")
-                //.processRef("gateClassifierProcessor")
-                //.processRef("simpleClassifierProcessor")
-                /*.process(new Processor() {
-                    @Override
-                    public void process(Exchange exchange) throws Exception {
-                        Twit bodyIn = (Twit) exchange.getIn().getBody();
+        //.convertBodyTo(String.class)
+        //.to("log:QueryValue?level=INFO&showHeaders=true")
+        //.processRef("gateClassifierProcessor")
+        //.processRef("simpleClassifierProcessor")
+        /*.process(new Processor() {
+            @Override
+            public void process(Exchange exchange) throws Exception {
+                Twit bodyIn = (Twit) exchange.getIn().getBody();
 
-                        DBObject dbObject = new BasicDBObject();
-                        dbObject.put("_id", bodyIn.getId());
-                        dbObject.put("text", bodyIn.getText());
+                DBObject dbObject = new BasicDBObject();
+                dbObject.put("_id", bodyIn.getId());
+                dbObject.put("text", bodyIn.getText());
 
-                        exchange.getIn().setBody(dbObject);
-                    }
-                })*/
-                from("direct:flight")
+                exchange.getIn().setBody(dbObject);
+            }
+        })*/
+        from("direct:flight")
                 .idempotentConsumer(header("twitterId"), MemoryIdempotentRepository.memoryIdempotentRepository(1000000))
-                //.idempotentConsumer(header("twitterId"), FileIdempotentRepository.fileIdempotentRepository(new File("file:///tmp/twitter/idempotent")))
+                        //.idempotentConsumer(header("twitterId"), FileIdempotentRepository.fileIdempotentRepository(new File("file:///tmp/twitter/idempotent")))
                 .setHeader("CamelFileName").simple(UUID.randomUUID().toString())
                 .to(outputDirectory);
+
+        from("file:src/data/in?fileName=mongoQuery.txt&noop=true&idempotent=false&delay=6000")
+                .autoStartup(true)
+                .setHeader(MongoDbConstants.LIMIT, constant(500))
+                .to("mongodb:mongoDb?database=vento&collection=reports&operation=findAll")
+                .log("${body.size()}")
+                .log("${body[0].get(\"twitterId\")}");
 
     }
 
