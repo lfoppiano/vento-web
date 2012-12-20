@@ -1,5 +1,6 @@
-package org.vento.crawler.processor;
+package org.vento.crawler.processor
 
+import com.mongodb.DBObject;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.vento.gate.SimpleBatchClassification;
@@ -47,9 +48,9 @@ public class SentiBatchClassificationProcessor implements Processor {
         }
 */
 
-        Twit twit = exchange.getIn().getBody(Twit.class);
+        DBObject twit = exchange.getIn().getBody(DBObject.class);
 
-        Double result = classifier.simpleClassify(twit.getText());
+        Double result = classifier.simpleClassify(twit.get("text"));
 
         twit.setScore(result.toString());
 

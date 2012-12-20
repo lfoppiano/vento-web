@@ -100,8 +100,12 @@ public class TwitterCrawlerRoute extends RouteBuilder {
                 .autoStartup(true)
                 .setHeader(MongoDbConstants.LIMIT, constant(500))
                 .to("mongodb:mongoDb?database=vento&collection=reports&operation=findAll")
-                .log("${body.size()}")
-                .log("${body[0].get(\"twitterId\")}");
+                .split(body())
+                .processRef("gateClassifierProcessor")
+                .log("${body}")
+                .log("${body.get(\"twitterId\")}")
+                .log("${body.get(\"text\")}")
+                .log("${body.get(\"score\")}");
 
     }
 
