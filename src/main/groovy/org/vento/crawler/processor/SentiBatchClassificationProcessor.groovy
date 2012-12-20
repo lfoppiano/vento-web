@@ -52,7 +52,7 @@ public class SentiBatchClassificationProcessor implements Processor {
 
         Double result = classifier.simpleClassify(twit.get("text"));
 
-        twit.setScore(result.toString());
+        twit.put("score", result.toString());
 
         exchange.getIn().setBody(twit);
     }
