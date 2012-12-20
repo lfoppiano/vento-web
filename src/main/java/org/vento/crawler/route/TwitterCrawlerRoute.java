@@ -48,19 +48,20 @@ public class TwitterCrawlerRoute extends RouteBuilder {
                 .redeliveryDelay(5000);
 
         from(sourceFileQuery)
-                .routeId("TwitterUrlBuilder")
+                .routeId("Twitter url builder")
                 .split().tokenize("\n")
                 .loop(15).copy()
                 .transform(body().append(simple("&page=${header.CamelLoopIndex}++")))
                 .to("seda:queryQueue");
 
         from("seda:queryQueue?concurrentConsumers=1")
-                .routeId("TwitterCrawler")
+                .routeId("Twitter crawler")
                         //.to("log:httpQuery?level=INFO&showHeaders=true")
                 .setHeader(Exchange.HTTP_METHOD, constant("GET"))
                 .setHeader(Exchange.HTTP_QUERY, simple("q=${body}&lang=en&rpp=100"))
                 .to("http://search.twitter.com/search.json?httpClient.cookiePolicy=ignoreCookies")
                 .convertBodyTo(String.class, "UTF-8")
+                //.to("mock:output")
                 .processRef("twitterPreprocessor")
                 .convertBodyTo(Twits.class)
                 .split().xpath("//twits/twit").streaming()
@@ -97,7 +98,7 @@ public class TwitterCrawlerRoute extends RouteBuilder {
                 .to(outputDirectory);
 
         from("file:src/data/in?fileName=mongoQuery.txt&noop=true&idempotent=false&delay=6000")
-                .autoStartup(true)
+                .routeId("Twitter classification")
                 .setHeader(MongoDbConstants.LIMIT, constant(500))
                 .to("mongodb:mongoDb?database=vento&collection=reports&operation=findAll")
                 .split(body())
