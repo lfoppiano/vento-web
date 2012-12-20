@@ -97,17 +97,6 @@ public class TwitterCrawlerRoute extends RouteBuilder {
                 .setHeader("CamelFileName").simple(UUID.randomUUID().toString())
                 .to(outputDirectory);
 
-        from("file:src/data/in?fileName=mongoQuery.txt&noop=true&idempotent=false&delay=6000")
-                .routeId("Twitter classification")
-                .setHeader(MongoDbConstants.LIMIT, constant(500))
-                .to("mongodb:mongoDb?database=vento&collection=reports&operation=findAll")
-                .split(body())
-                .processRef("gateClassifierProcessor")
-                .log("${body}")
-                .log("${body.get(\"twitterId\")}")
-                .log("${body.get(\"text\")}")
-                .log("${body.get(\"score\")}");
-
     }
 
 }
