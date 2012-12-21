@@ -1,4 +1,4 @@
-package org.vento.crawler.route;
+package org.vento.crawler.route.amazon;
 
 import org.apache.camel.Endpoint;
 import org.apache.camel.EndpointInject;

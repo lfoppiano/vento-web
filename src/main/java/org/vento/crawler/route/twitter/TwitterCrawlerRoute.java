@@ -1,4 +1,4 @@
-package org.vento.crawler.route;
+package org.vento.crawler.route.twitter;
 
 import org.apache.camel.*;
 import org.apache.camel.builder.RouteBuilder;
