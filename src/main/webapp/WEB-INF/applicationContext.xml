@@ -55,6 +55,8 @@
         <!--<endpoint id="outputDirectory" uri="file:${output.dir}?fileName=twitter-output-$simple{date:now:yyMMddHHmmssSSSS}.xml" />-->
         <endpoint id="outputDirectory" uri="${output.dir}" />
 
+        <endpoint id="trainingTemp" uri="${training.dir}" />
+
         <endpoint id="outputQueue" uri="${outputQueue.uri}" />
 
         <endpoint id="sourceFileReviews" uri="file:${inputReviews.dir}?fileName=sourceFileReviews.txt&amp;noop=true" />
