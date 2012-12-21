@@ -9,6 +9,7 @@ import org.vento.semantic.sentiment.SentiBatchProcessingImpl;
 
 import java.io.File;
 import java.net.URL;
+import java.util.UUID;
 
 /**
  * Created with IntelliJ IDEA.
@@ -35,9 +36,11 @@ public class TrainingRoute extends RouteBuilder {
 
         from("file:src/data/in?fileName=mongoQueryTraining.txt&noop=true&idempotent=false&delay=30000")
                 .routeId("Route for training")
-                //.setHeader(MongoDbConstants.LIMIT, constant(500))
+                .setHeader(MongoDbConstants.LIMIT, constant(500))
                 .to("mongodb:mongoDb?database=vento&collection=reports&operation=findAll")
-                .split(body()).streaming()
+                .split(body())
+                .log("${body.get(\"twitterId\")} - ${body.get(\"text\")} - ${body.get(\"score\")} - ${body.get(\"type\")} ")
+                .setHeader("CamelFileName").simple(UUID.randomUUID().toString()+".xml")
                 .to(trainingTemp)
                 .process(new Processor() {
                     private GateBatchProcessing gateBatchProcessing;
@@ -50,14 +53,9 @@ public class TrainingRoute extends RouteBuilder {
                                 "/tmp/twitter/",
                                 "trainingCorpus");
 
-                        gateBatchProcessing.addAllToCorpus(new URL(trainingTemp.getEndpointUri()), "xml");
+                        gateBatchProcessing.addAllToCorpus(new URL("/tmp/twitter/training"), "xml");
                         gateBatchProcessing.perform();
                     }
                 });
-
-        /*        .processRef("gateClassifierProcessor")
-                .log("${body.get(\"twitterId\")} - ${body.get(\"text\")} - ${body.get(\"score\")}")
-                .to("mongodb:mongoDb?database=vento&collection=reports&operation=save");
-                */
     }
 }
