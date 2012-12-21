@@ -5,7 +5,8 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.vento.gate.SimpleBatchClassification;
 import org.vento.model.Twit;
-import org.vento.semantic.sentiment.SentiBatchClassificationImpl;
+import org.vento.semantic.sentiment.SentiBatchClassificationImpl
+import org.vento.utility.VentoTypes;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -53,6 +54,7 @@ public class SentiBatchClassificationProcessor implements Processor {
         Double result = classifier.simpleClassify(twit.get("text"));
 
         twit.put("score", result.toString());
+        twit.put("type", VentoTypes.CLASSIFICATION)
 
         exchange.getIn().setBody(twit);
     }
