@@ -32,9 +32,6 @@ public class ClassificationRoute extends RouteBuilder {
                 .setHeader(MongoDbConstants.LIMIT, constant(500))
                 .to("mongodb:mongoDb?database=vento&collection=reports&operation=findAll")
                 .split(body())
-                .to("direct:sega");
-
-        from("direct:sega")
                 .processRef("gateClassifierProcessor")
                 .log("${body.get(\"twitterId\")} - ${body.get(\"text\")} - ${body.get(\"score\")}")
                 .to("mongodb:mongoDb?database=vento&collection=reports&operation=save");
