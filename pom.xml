@@ -84,20 +84,22 @@
         </dependency>
 
         <!-- logging -->
-        <dependency>
+        <!--dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.6.1</version>
-        </dependency>
+            <version>1.6.6</version>
+        </dependency-->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
-            <version>1.6.1</version>
+            <version>1.6.6</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>1.2.16</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -138,13 +140,14 @@
                 <artifactId>gmaven-plugin</artifactId>
                 <version>1.4</version>
                 <configuration>
-                    <providerSelection>1.8</providerSelection>
+                    <providerSelection>2.0</providerSelection>
+                    <sourceEncoding>UTF-8</sourceEncoding>
                     <source/>
                 </configuration>
                 <dependencies>
-                    <dependency>
+                    <!--dependency>
                         <groupId>org.codehaus.gmaven.runtime</groupId>
-                        <artifactId>gmaven-runtime-1.8</artifactId>
+                        <artifactId>gmaven-runtime</artifactId>
                         <version>1.4</version>
                         <exclusions>
                             <exclusion>
@@ -152,7 +155,7 @@
                                 <artifactId>groovy-all</artifactId>
                             </exclusion>
                         </exclusions>
-                    </dependency>
+                    </dependency-->
                     <dependency>
                         <groupId>org.codehaus.groovy</groupId>
                         <artifactId>groovy-all</artifactId>
@@ -229,8 +232,8 @@
     <properties>
         <camel.version>2.10.3</camel.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <jetty-version>8.1.5.v20120716</jetty-version>
+        <jetty-version>8.1.7.v20120910</jetty-version>
         <xbean-spring-version>3.5</xbean-spring-version>
-        <groovy.version>1.8.6</groovy.version>
+        <groovy.version>2.0.0</groovy.version>
     </properties>
 </project>
