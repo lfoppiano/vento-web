@@ -62,6 +62,10 @@
         <endpoint id="sourceFileReviews" uri="file:${inputReviews.dir}?fileName=sourceFileReviews.txt&amp;noop=true" />
         <endpoint id="outputReviewsDirectory" uri="file:${outputReviews.dir}?fileName=amazonReview-output-$simple{date:now:yyMMddHHmmssSSSS}.xml" />
         <endpoint id="rejectReviewsLocation" uri="file:${reject.dir}?fileName=amazonReview-reject-$simple{date:now:yyMMddHHmmssSSSS}.xml" />
+
+        <!-- Training route -->
+        <endpoint id="mongoQueryTraining" uri="file:src/data/in?fileName=mongoQueryTraining.txt&amp;noop=true&amp;idempotent=false&amp;delay=30000" />
+        <endpoint id="mongoConnector" uri="mongodb:mongoDb?database=vento&amp;collection=reports&amp;operation=findAll" />
     </camelContext>
 
 </beans>
