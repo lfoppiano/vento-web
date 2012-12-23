@@ -1,1 +1,18 @@
-apple                             z
+apple
+facebook
+nike
+barclays
+libor
+microsoft
+ios
+amazon
+ebay
+paypal
+pepsi
+bbc
+mozilla
+batman
+spiderman
+dell
+booking.com
+london
