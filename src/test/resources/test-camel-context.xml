@@ -20,16 +20,40 @@
 
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                  http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+                  http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
 
-    <camelContext xmlns="http://camel.apache.org/schema/spring">
+    <camelContext xmlns="http://camel.apache.org/schema/spring" autoStartup="false">
 
-        <package>org.vento.crawler</package>
+        <!--package>org.vento.crawler</package-->
+        <packageScan>
+            <package>org.vento.crawler</package>
+            <excludes>**.Crawler</excludes>
+            <excludes>**.ClassificationRoute</excludes>
+            <includes>org.vento.crawler.route.TrainingRoute</includes>
+        </packageScan>
 
-        <endpoint id="sourceFileQuery" uri="direct:start"/>
+        <!-- Twitter route -->
+        <!--endpoint id="sourceFileQuery" uri="direct:start"/>
         <endpoint id="queryQueue" uri="mock:queryQueue" />
-        <!--<endpoint id="outputQueue" uri="mock:outputQueue" />-->
-        <endpoint id="outputDirectory" uri="mock:outputDirectory" />
+        <endpoint id="rejectTwitterLocation" uri="mock:rejectTwitterLocation" />
+        <endpoint id="outputDirectory" uri="mock:outputDirectory" /-->
+
+        <!-- Amazon reviews -->
+        <!--endpoint id="sourceFileReviews" uri="mock:sourceFileReviews" />
+        <endpoint id="rejectReviewsLocation" uri="mock:rejectReviewsLocation" /-->
+        <endpoint id="rejectLocation" uri="mock:rejectLocation" />
+
+        <!-- Classfication -->
+
+        <!-- Testing -->
+        <endpoint id="outputReviewsDirectory" uri="mock:outputReviewDirectory" />
+        <endpoint id="trainingTemp" uri="mock:trainingTemp" />
+
+        <endpoint id="mongoQueryTraining" uri="direct:flight" />
+        <endpoint id="mongoConnector" uri="mock:mongo" />
+
 
     </camelContext>
 
