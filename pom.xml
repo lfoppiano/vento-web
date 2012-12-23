@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
@@ -7,17 +8,11 @@
     <artifactId>vento-web</artifactId>
     <version>1.0</version>
 
+    <name>Vento Web Camel Route</name>
+
     <packaging>war</packaging>
 
     <dependencies>
-        <dependency>
-            <groupId>org.apache.camel</groupId>
-            <artifactId>camel-web</artifactId>
-            <version>${camel.version}</version>
-            <type>war</type>
-            <scope>runtime</scope>
-        </dependency>
-
         <!-- commons -->
         <dependency>
             <groupId>commons-codec</groupId>
@@ -42,7 +37,21 @@
             <version>${camel.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-test-spring</artifactId>
+            <version>${camel.version}</version>
+            <scope>test</scope>
+        </dependency>
 
+        <!-- camel -->
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-web</artifactId>
+            <version>${camel.version}</version>
+            <type>war</type>
+            <scope>runtime</scope>
+        </dependency>
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-core</artifactId>
@@ -53,7 +62,6 @@
             <artifactId>camel-spring</artifactId>
             <version>${camel.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-jaxb</artifactId>
@@ -69,10 +77,9 @@
             <artifactId>camel-groovy</artifactId>
             <version>${camel.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.apache.camel</groupId>
-            <artifactId>camel-mongodb</artifactId>
+            <artifactId>camel-stream</artifactId>
             <version>${camel.version}</version>
         </dependency>
 
@@ -82,13 +89,19 @@
             <artifactId>camel-http</artifactId>
             <version>${camel.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-mongodb</artifactId>
+            <version>${camel.version}</version>
+        </dependency>
 
         <!-- logging -->
-        <!--dependency>
+        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>1.6.6</version>
-        </dependency-->
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
@@ -98,10 +111,11 @@
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
-            <version>1.2.16</version>
-            <scope>provided</scope>
+            <version>1.2.17</version>
+            <!--scope>provided</scope-->
         </dependency>
 
+        <!-- Groovy stuff -->
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy-all</artifactId>
@@ -128,12 +142,21 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
+                <version>2.5.1</version>
                 <configuration>
                     <source>1.6</source>
                     <target>1.6</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.4.3</version>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+
 
             <plugin>
                 <groupId>org.codehaus.gmaven</groupId>
@@ -175,16 +198,16 @@
             </plugin>
 
             <!-- allows the route to be ran via 'mvn camel:run' -->
-<!--
-            <plugin>
-                <groupId>org.apache.camel</groupId>
-                <artifactId>camel-maven-plugin</artifactId>
-                <version>${camel.version}</version>
-                <configuration>
-                    <applicationContextUri>WEB-INF/applicationContext.xml</applicationContextUri>
-                </configuration>
-            </plugin>
--->
+            <!--
+                        <plugin>
+                            <groupId>org.apache.camel</groupId>
+                            <artifactId>camel-maven-plugin</artifactId>
+                            <version>${camel.version}</version>
+                            <configuration>
+                                <applicationContextUri>WEB-INF/applicationContext.xml</applicationContextUri>
+                            </configuration>
+                        </plugin>
+            -->
 
             <plugin>
                 <groupId>org.jvnet.jaxb2.maven2</groupId>
@@ -212,7 +235,7 @@
                     <stopKey/>
                     <stopPort/>
                     <webAppConfig>
-                        <contextPath>/vento</contextPath>
+                        <contextPath>/</contextPath>
                     </webAppConfig>
 
                     <systemProperties>
