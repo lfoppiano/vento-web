@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
-<log4j:configuration debug="true"
-                     xmlns:log4j='http://jakarta.apache.org/log4j/'>
+<log4j:configuration xmlns:log4j='http://jakarta.apache.org/log4j/'>
 
     <root>
         <level value="INFO"/>
@@ -10,8 +9,8 @@
 
     <appender name="consoleAppender" class="org.apache.log4j.ConsoleAppender">
         <layout class="org.apache.log4j.PatternLayout">
-            <!--param name="ConversionPattern" value="%d{dd MMM yyyy HH:mm:ss} %5p %c{1} - %m%n"/-->
-            <param name="ConversionPattern" value="[%30.30t] %-30.30c{1} %-5p %m%n"/>
+            <param name="ConversionPattern" value="%d{dd MMM yyyy HH:mm:ss} %5p %c{1} - %m%n"/>
+            <!--param name="ConversionPattern" value="[%30.30t] %-30.30c{1} %-5p %m%n"/-->
         </layout>
     </appender>
 
