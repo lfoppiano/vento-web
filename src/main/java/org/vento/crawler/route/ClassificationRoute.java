@@ -28,7 +28,7 @@ public class ClassificationRoute extends RouteBuilder {
         );
 
         from("file:src/data/in?fileName=mongoQuery.txt&noop=true&idempotent=false&delay=30000")
-                .routeId("Twitter classification")
+                .routeId("Sentiment classification")
                 .convertBodyTo(String.class)
                 .setHeader(MongoDbConstants.LIMIT, constant(500))
                 .to("mongodb:mongoDb?database=vento&collection=reports&operation=findAll")

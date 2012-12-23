@@ -41,7 +41,7 @@ public class TrainingRoute extends RouteBuilder {
         );
 
         from(mongoQueryTraining)
-                .routeId("Route for training")
+                .routeId("Sentiment training")
                 .convertBodyTo(String.class)
                 .setHeader(MongoDbConstants.LIMIT, constant(1))
                 .to(mongoConnector)
