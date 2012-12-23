@@ -43,7 +43,7 @@ public class TrainingRoute extends RouteBuilder {
         );
 
         from(mongoQueryTraining)
-                .routeId("Sentiment training")
+                .routeId("Training input extraction")
                 .convertBodyTo(String.class)
                 .setHeader(MongoDbConstants.LIMIT, constant(500))
                 .to(mongoConnector)
@@ -57,24 +57,29 @@ public class TrainingRoute extends RouteBuilder {
                         DBObject inBody = (DBObject) exchange.getIn().getBody();
                         twit.setText((String) inBody.get("text"));
                         twit.setTwitterId((String) inBody.get("twitterId"));
+                        twit.setScore((String) inBody.get("score"));
                         exchange.getIn().setBody(twit);
                     }
                 })
                 .to(trainingTemp);
-                /*.process(new Processor() {
+                //.setBody(simple("blablaValue"))
+
+           from(mongoQueryTraining) //TODO: works but had to decouple the routes, this one has to run only once and has to be something smarter, just a temp solution
+                .routeId("Training execution")
+                .process(new Processor() {
                     private GateBatchProcessing gateBatchProcessing;
 
-                    @Override
+                    @Override                                              //TODO: all paths from windows, have to be changed and put into config
                     public void process(Exchange exchange) throws Exception {
                         gateBatchProcessing = new SentiBatchProcessingImpl(
-                                new File("/Applications/GATE_Developer_7.0"),
-                                new File("/opt/local/gate-training/batch-learning.training.configuration.xml"),
-                                "/tmp/twitter/",
+                                new File("E:/gateWorkspace/GATE_Developer_7.1/"),
+                                new File("E:/gateWorkspace/gate-project-training/batch-learning.training.configuration.xml"),
+                                "file:/E:/tmp/twitter/tempTrainingStore",
                                 "trainingCorpus");
 
-                        gateBatchProcessing.addAllToCorpus(new URL("/tmp/twitter/training"), "xml");
+                        gateBatchProcessing.addAllToCorpus(new URL("file:/E:/tmp/twitter/training"), "xml");
                         gateBatchProcessing.perform();
                     }
-                });*/
+                });
     }
 }
