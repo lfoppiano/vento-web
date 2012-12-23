@@ -26,6 +26,12 @@ public class TrainingRoute extends RouteBuilder {
     @EndpointInject(ref = "trainingTemp")
     private Endpoint trainingTemp;
 
+    @EndpointInject(ref = "mongoQueryTraining")
+    private Endpoint mongoQueryTraining;
+
+    @EndpointInject(ref = "mongoConnector")
+    private Endpoint mongoConnector;
+
     @Override
     public void configure() throws Exception {
 
@@ -34,10 +40,11 @@ public class TrainingRoute extends RouteBuilder {
                         .retryAttemptedLogLevel(LoggingLevel.WARN)
         );
 
-        from("file:src/data/in?fileName=mongoQueryTraining.txt&noop=true&idempotent=false&delay=30000")
+        from(mongoQueryTraining)
                 .routeId("Route for training")
-                .setHeader(MongoDbConstants.LIMIT, constant(500))
-                .to("mongodb:mongoDb?database=vento&collection=reports&operation=findAll")
+                .convertBodyTo(String.class)
+                .setHeader(MongoDbConstants.LIMIT, constant(1))
+                .to(mongoConnector)
                 .split(body())
                 .log("${body.get(\"twitterId\")} - ${body.get(\"text\")} - ${body.get(\"score\")} - ${body.get(\"type\")} ")
                 .setHeader("CamelFileName").simple(UUID.randomUUID().toString()+".xml")
