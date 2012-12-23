@@ -1,10 +1,12 @@
 package org.vento.crawler.route;
 
+import com.mongodb.DBObject;
 import org.apache.camel.*;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mongodb.MongoDbConstants;
 import org.codehaus.groovy.runtime.WritableFile;
 import org.vento.gate.GateBatchProcessing;
+import org.vento.model.Twit;
 import org.vento.semantic.sentiment.SentiBatchProcessingImpl;
 
 import java.io.File;
@@ -43,13 +45,23 @@ public class TrainingRoute extends RouteBuilder {
         from(mongoQueryTraining)
                 .routeId("Sentiment training")
                 .convertBodyTo(String.class)
-                .setHeader(MongoDbConstants.LIMIT, constant(1))
+                .setHeader(MongoDbConstants.LIMIT, constant(500))
                 .to(mongoConnector)
                 .split(body())
                 .log("${body.get(\"twitterId\")} - ${body.get(\"text\")} - ${body.get(\"score\")} - ${body.get(\"type\")} ")
-                .setHeader("CamelFileName").simple(UUID.randomUUID().toString()+".xml")
-                .to(trainingTemp)
+                //.convertBodyTo(String.class)
                 .process(new Processor() {
+                    @Override
+                    public void process(Exchange exchange) throws Exception {
+                        Twit twit = new Twit();
+                        DBObject inBody = (DBObject) exchange.getIn().getBody();
+                        twit.setText((String) inBody.get("text"));
+                        twit.setTwitterId((String) inBody.get("twitterId"));
+                        exchange.getIn().setBody(twit);
+                    }
+                })
+                .to(trainingTemp);
+                /*.process(new Processor() {
                     private GateBatchProcessing gateBatchProcessing;
 
                     @Override
@@ -63,6 +75,6 @@ public class TrainingRoute extends RouteBuilder {
                         gateBatchProcessing.addAllToCorpus(new URL("/tmp/twitter/training"), "xml");
                         gateBatchProcessing.perform();
                     }
-                });
+                });*/
     }
 }
