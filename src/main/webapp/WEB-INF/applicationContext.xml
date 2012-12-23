@@ -55,7 +55,6 @@
         <!--<endpoint id="outputDirectory" uri="file:${output.dir}?fileName=twitter-output-$simple{date:now:yyMMddHHmmssSSSS}.xml" />-->
         <endpoint id="outputDirectory" uri="${output.dir}" />
 
-        <endpoint id="trainingTemp" uri="file:${training.dir}?fileName=training-$simple{date:now:yyMMddHHmmssSSSS}.xml" />
 
         <endpoint id="outputQueue" uri="${outputQueue.uri}" />
 
@@ -63,9 +62,15 @@
         <endpoint id="outputReviewsDirectory" uri="file:${outputReviews.dir}?fileName=amazonReview-output-$simple{date:now:yyMMddHHmmssSSSS}.xml" />
         <endpoint id="rejectReviewsLocation" uri="file:${reject.dir}?fileName=amazonReview-reject-$simple{date:now:yyMMddHHmmssSSSS}.xml" />
 
+        <!-- Classification route -->
+        <endpoint id="mongoQueryClassification" uri="file:src/data/in?fileName=mongoQuery.txt&amp;noop=true&amp;idempotent=false&amp;delay=30000" />
+        <endpoint id="mongoFindAllClassification" uri="mongodb:mongoDb?database=vento&amp;collection=reports&amp;operation=findAll" />
+        <endpoint id="mongoUpdateClassification" uri="mongodb:mongoDb?database=vento&amp;collection=reports&amp;operation=save" />
+
         <!-- Training route -->
         <endpoint id="mongoQueryTraining" uri="file:src/data/in?fileName=mongoQueryTraining.txt&amp;noop=true&amp;idempotent=false&amp;delay=30000" />
         <endpoint id="mongoConnector" uri="mongodb:mongoDb?database=vento&amp;collection=reports&amp;operation=findAll" />
+        <endpoint id="trainingTemp" uri="file:${training.dir}?fileName=training-$simple{date:now:yyMMddHHmmssSSSS}.xml" />
     </camelContext>
 
 </beans>

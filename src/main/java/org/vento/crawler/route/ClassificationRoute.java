@@ -19,6 +19,15 @@ public class ClassificationRoute extends RouteBuilder {
     @EndpointInject(ref = "rejectLocation")
     private Endpoint rejectEndpoint;
 
+    @EndpointInject(ref = "mongoQueryClassification")
+    private Endpoint mongoQueryClassification;
+
+    @EndpointInject(ref = "mongoFindAllClassification")
+    private Endpoint mongoFindAllClassification;
+
+    @EndpointInject(ref = "mongoUpdateClassification")
+    private Endpoint mongoUpdateClassification;
+
     @Override
     public void configure() throws Exception {
 
@@ -27,14 +36,14 @@ public class ClassificationRoute extends RouteBuilder {
                         .retryAttemptedLogLevel(LoggingLevel.WARN)
         );
 
-        from("file:src/data/in?fileName=mongoQuery.txt&noop=true&idempotent=false&delay=30000")
+        from(mongoQueryClassification)
                 .routeId("Sentiment classification")
                 .convertBodyTo(String.class)
                 .setHeader(MongoDbConstants.LIMIT, constant(500))
-                .to("mongodb:mongoDb?database=vento&collection=reports&operation=findAll")
+                .to(mongoFindAllClassification)
                 .split(body())
                 .processRef("gateClassifierProcessor")
                 .log("${body.get(\"twitterId\")} - ${body.get(\"text\")} - ${body.get(\"score\")}")
-                .to("mongodb:mongoDb?database=vento&collection=reports&operation=save");
+                .to(mongoUpdateClassification);
     }
 }
