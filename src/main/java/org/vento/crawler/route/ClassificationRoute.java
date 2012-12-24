@@ -42,6 +42,8 @@ public class ClassificationRoute extends RouteBuilder {
                 .setHeader(MongoDbConstants.LIMIT, constant(500))
                 .to(mongoFindAllClassification)
                 .split(body())
+                .setHeader("origin")
+                .simple("classification")
                 .processRef("gateClassifierProcessor")
                 .log("${body.get(\"twitterId\")} - ${body.get(\"text\")} - ${body.get(\"score\")}")
                 .to(mongoUpdateClassification);

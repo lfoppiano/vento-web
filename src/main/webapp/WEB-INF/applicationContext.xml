@@ -16,12 +16,20 @@
     <bean id="twitterPreprocessor" class="org.vento.crawler.processor.TwitterPreprocessor" />
 
     <bean id="gateClassifier" class="org.vento.semantic.sentiment.SentiBatchClassificationImpl">
-        <property name="gateHome" value="/Applications/GATE_Developer_7.0" />
-        <property name="gateConfigFile"  value="/opt/local/gate/batch-learning.classification.configuration.xml" />
+        <property name="gateHome" value="E:/gateWorkspace/GATE_Developer_7.1/" />
+        <property name="gateConfigFile"  value="E:/gateWorkspace/gate-project-classification/batch-learning.classification.configuration.xml" />
         <property name="corpusName" value="classificationTestCorpus" />
     </bean>
+
+    <bean id="gateEvaluationClassifier" class="org.vento.semantic.sentiment.SentiBatchClassificationImpl">
+        <property name="gateHome" value="E:/gateWorkspace/GATE_Developer_7.1/" />
+        <property name="gateConfigFile"  value="E:/gateWorkspace/gate-project-evaluationClassification/batch-learning.classification.configuration.xml" />
+        <property name="corpusName" value="evaluationTestCorpus" />
+    </bean>
+
     <bean id="gateClassifierProcessor" class="org.vento.crawler.processor.SentiBatchClassificationProcessor">
         <property name="classifier" ref="gateClassifier"/>
+        <property name="evaluationClassifier" ref="gateEvaluationClassifier"/>
     </bean>
 
     <bean id="simpleClassifier" class="org.vento.semantic.sentiment.SentiBatchClassificationSimpleImpl">
@@ -68,9 +76,15 @@
         <endpoint id="mongoUpdateClassification" uri="mongodb:mongoDb?database=vento&amp;collection=reports&amp;operation=save" />
 
         <!-- Training route -->
-        <endpoint id="mongoQueryTraining" uri="file:src/data/in?fileName=mongoQueryTraining.txt&amp;noop=true&amp;idempotent=false&amp;delay=30000" />
+        <endpoint id="mongoQueryTraining" uri="file:src/data/in?fileName=mongoQueryTraining.txt&amp;noop=true&amp;idempotent=false&amp;delay=3000000" />
         <endpoint id="mongoConnector" uri="mongodb:mongoDb?database=vento&amp;collection=reports&amp;operation=findAll" />
         <endpoint id="trainingTemp" uri="file:${training.dir}?fileName=training-$simple{date:now:yyMMddHHmmssSSSS}.xml" />
+
+        <!-- Testing route -->
+        <endpoint id="mongoQueryTesting" uri="file:src/data/in?fileName=mongoQueryTesting.txt&amp;noop=true&amp;idempotent=false&amp;delay=3000000" />
+        <endpoint id="mongoFindAllTesting" uri="mongodb:mongoDb?database=vento&amp;collection=reports&amp;operation=findAll" />
+        <endpoint id="mongoUpdateTesting" uri="file:${training.dir}?fileName=training-$simple{date:now:yyMMddHHmmssSSSS}.xml" />
+
     </camelContext>
 
 </beans>
