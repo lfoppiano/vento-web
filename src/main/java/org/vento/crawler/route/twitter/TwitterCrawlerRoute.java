@@ -2,7 +2,6 @@ package org.vento.crawler.route.twitter;
 
 import org.apache.camel.*;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.component.mongodb.MongoDbConstants;
 import org.apache.camel.processor.idempotent.MemoryIdempotentRepository;
 import org.vento.model.Twit;
 import org.vento.model.Twits;
@@ -23,8 +22,8 @@ public class TwitterCrawlerRoute extends RouteBuilder {
     @EndpointInject(ref = "sourceFileQuery")
     private Endpoint sourceFileQuery;
 
-    @EndpointInject(ref = "outputDirectory")
-    private Endpoint outputDirectory;
+    @EndpointInject(ref = "mongoStorageSave")
+    private Endpoint dataStorage;
 
     @EndpointInject(ref = "rejectTwitterLocation")
     private Endpoint twitterRejectEndpoint;
@@ -72,29 +71,10 @@ public class TwitterCrawlerRoute extends RouteBuilder {
                         exchangeIn.setHeader("twitterId", ((Twit) exchangeIn.getBody()).getTwitterId());
                     }
                 })
-                .to("direct:flight");
-
-        //.convertBodyTo(String.class)
-        //.to("log:QueryValue?level=INFO&showHeaders=true")
-        //.processRef("gateClassifierProcessor")
-        //.processRef("simpleClassifierProcessor")
-        /*.process(new Processor() {
-            @Override
-            public void process(Exchange exchange) throws Exception {
-                Twit bodyIn = (Twit) exchange.getIn().getBody();
-
-                DBObject dbObject = new BasicDBObject();
-                dbObject.put("_id", bodyIn.getId());
-                dbObject.put("text", bodyIn.getText());
-
-                exchange.getIn().setBody(dbObject);
-            }
-        })*/
-        from("direct:flight")
                 .idempotentConsumer(header("twitterId"), MemoryIdempotentRepository.memoryIdempotentRepository(1000000))
                         //.idempotentConsumer(header("twitterId"), FileIdempotentRepository.fileIdempotentRepository(new File("file:///tmp/twitter/idempotent")))
                 .setHeader("CamelFileName").simple(UUID.randomUUID().toString())
-                .to(outputDirectory);
+                .to(dataStorage);
 
     }
 

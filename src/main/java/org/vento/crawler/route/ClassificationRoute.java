@@ -22,19 +22,19 @@ public class ClassificationRoute extends RouteBuilder {
     @EndpointInject(ref = "mongoQueryClassification")
     private Endpoint mongoQueryClassification;
 
-    @EndpointInject(ref = "mongoFindAllClassification")
+    @EndpointInject(ref = "mongoStorageFindAll")
     private Endpoint mongoFindAllClassification;
 
-    @EndpointInject(ref = "mongoUpdateClassification")
+    @EndpointInject(ref = "mongoStorageSave")
     private Endpoint mongoUpdateClassification;
 
     @Override
     public void configure() throws Exception {
 
-        errorHandler(
+        /*errorHandler(
                 deadLetterChannel(rejectEndpoint)
                         .retryAttemptedLogLevel(LoggingLevel.WARN)
-        );
+        );*/
 
         from(mongoQueryClassification)
                 .routeId("Sentiment classification")

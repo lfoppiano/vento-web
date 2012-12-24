@@ -33,10 +33,10 @@ public class TrainingRoute extends RouteBuilder {
     @EndpointInject(ref = "mongoQueryTraining")
     private Endpoint mongoQueryTraining;
 
-    @EndpointInject(ref = "mongoConnector")
+    @EndpointInject(ref = "mongoStorageFindAll")
     private Endpoint mongoConnector;
 
-    @EndpointInject(ref = "storageTypeUpdate")
+    @EndpointInject(ref = "mongoStorageSave")
     private Endpoint storageTypeUpdate;
 
 
@@ -60,25 +60,7 @@ public class TrainingRoute extends RouteBuilder {
                 .setHeader("aggregationId", constant("bao"))
                 .aggregate(header("aggregationId"), new TrainingQueueAggregationStrategy()).completionSize(10)
                 .log("I have finished to aggregate 1000 elements! Run the training! ${body}")
-                .process(new Processor() {
-                    private GateBatchProcessing gateBatchProcessing;
-
-                    @Override
-                    //TODO: all paths from windows, have to be changed and put into config
-                    public void process(Exchange exchange) throws Exception {
-                        String dataStoreDir = "file:/tmp/twitter/tempTrainingStore";
-
-                        gateBatchProcessing = new SentiBatchProcessingImpl(
-                                //new File("/Applications/GATE_Developer_7.0"),
-                                new File("/Applications/gate-7.1-build4485-BIN"),
-                                new File("/opt/local/gate-training/batch-learning.training.configuration.xml"),
-                                dataStoreDir,
-                                "trainingCorpus");
-
-                        gateBatchProcessing.addAllToCorpus(new URL("file:/tmp/twitter/training"), "xml");
-                        gateBatchProcessing.perform();
-                    }
-                })
+                .processRef("gateTrainingProcessor")
                 .log("Finish training! Updating stored data.")
                 .split().tokenize("\n")
                 .log("Processing ${body}")

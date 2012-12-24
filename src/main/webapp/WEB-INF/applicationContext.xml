@@ -17,20 +17,32 @@
     <bean id="trainingDataPreprocessor" class="org.vento.training.processor.TrainingDataPreprocessor" />
 
     <bean id="gateClassifier" class="org.vento.semantic.sentiment.SentiBatchClassificationImpl">
-        <property name="gateHome" value="/Applications/GATE_Developer_7.0" />
-        <property name="gateConfigFile"  value="/opt/local/gate/batch-learning.classification.configuration.xml" />
+        <property name="gateHome" value="${gate.home}" />
+        <property name="gateConfigFile"  value="${gate.classification}" />
         <property name="corpusName" value="classificationTestCorpus" />
     </bean>
 
+    <bean id="gateEngineTesting" class="org.vento.semantic.sentiment.SentiBatchProcessingImpl">
+        <constructor-arg name="gateHome" value="${gate.home}" />
+        <constructor-arg name="projectConfigFile"  value="${gate.training}" />
+        <constructor-arg name="dataStoreDir" value="file:/tmp/twitter/tempTrainingStore" />
+        <constructor-arg name="corpusName" value="trainingCorpus" />
+    </bean>
+
     <bean id="gateEvaluationClassifier" class="org.vento.semantic.sentiment.SentiBatchClassificationImpl">
-        <property name="gateHome" value="E:/gateWorkspace/GATE_Developer_7.1/" />
-        <property name="gateConfigFile"  value="E:/gateWorkspace/gate-project-evaluationClassification/batch-learning.classification.configuration.xml" />
+        <property name="gateHome" value="${gate.home}" />
+        <property name="gateConfigFile"  value="${gate.classification}" />
         <property name="corpusName" value="evaluationTestCorpus" />
     </bean>
 
     <bean id="gateClassifierProcessor" class="org.vento.crawler.processor.SentiBatchClassificationProcessor">
         <property name="classifier" ref="gateClassifier"/>
         <property name="evaluationClassifier" ref="gateEvaluationClassifier"/>
+    </bean>
+
+    <bean id="gateTrainingProcessor" class="org.vento.training.processor.SentiBatchTrainingProcessor">
+        <property name="engine" ref="gateEngineTesting"/>
+        <property name="corpusDirectory" value="file:/tmp/twitter/training" />
     </bean>
 
     <bean id="simpleClassifier" class="org.vento.semantic.sentiment.SentiBatchClassificationSimpleImpl">
@@ -58,29 +70,32 @@
         <package>org.vento.crawler.route</package>
         <!--<package>org.vento.semantics.route</package>-->
 
+        <!-- Twitter crawler -->
         <endpoint id="sourceFileQuery" uri="file:${input.dir}?fileName=sourceQuery.txt&amp;noop=true&amp;idempotent=false&amp;delay=480000"/>
         <endpoint id="rejectTwitterLocation" uri="file:${reject.dir}?fileName=twitter-reject-$simple{date:now:yyMMddHHmmssSSSS}.xml" />
         <endpoint id="rejectLocation" uri="file:${reject.dir}?fileName=reject-$simple{date:now:yyMMddHHmmssSSSS}.xml" />
         <!--<endpoint id="outputDirectory" uri="file:${output.dir}?fileName=twitter-output-$simple{date:now:yyMMddHHmmssSSSS}.xml" />-->
-        <endpoint id="outputDirectory" uri="${output.dir}" />
-
-
+        <!--endpoint id="outputDirectory" uri="${output.dir}" /-->
         <endpoint id="outputQueue" uri="${outputQueue.uri}" />
 
+        <!-- Amazon Reviews -->
         <endpoint id="sourceFileReviews" uri="file:${inputReviews.dir}?fileName=sourceFileReviews.txt&amp;noop=true" />
         <endpoint id="outputReviewsDirectory" uri="file:${outputReviews.dir}?fileName=amazonReview-output-$simple{date:now:yyMMddHHmmssSSSS}.xml" />
         <endpoint id="rejectReviewsLocation" uri="file:${reject.dir}?fileName=amazonReview-reject-$simple{date:now:yyMMddHHmmssSSSS}.xml" />
 
         <!-- Classification route -->
         <endpoint id="mongoQueryClassification" uri="file:src/data/in?fileName=mongoQuery.txt&amp;noop=true&amp;idempotent=false&amp;delay=30000" />
-        <endpoint id="mongoFindAllClassification" uri="mongodb:mongoDb?database=vento&amp;collection=reports&amp;operation=findAll" />
-        <endpoint id="mongoUpdateClassification" uri="mongodb:mongoDb?database=vento&amp;collection=reports&amp;operation=save" />
 
         <!-- Training route -->
         <endpoint id="mongoQueryTraining" uri="file:src/data/in?fileName=mongoQueryTraining.txt&amp;noop=true&amp;idempotent=false&amp;delay=600000" />
-        <endpoint id="mongoConnector" uri="mongodb:mongoDb?database=vento&amp;collection=reports&amp;operation=findAll" />
         <endpoint id="trainingTemp" uri="file:${training.dir}?fileName=training-$simple{date:now:yyMMddHHmmssSSSS}.xml" />
-        <endpoint id="storageTypeUpdate" uri="mongodb:mongoDb?database=vento&amp;collection=reports&amp;operation=save" />
+
+        <!-- Testing route -->
+        <endpoint id="mongoQueryTesting" uri="file:src/data/in?fileName=mongoQueryTesting.txt&amp;noop=true&amp;idempotent=false&amp;delay=600000" />
+
+        <!-- MONGODB Generic endpoint -->
+        <endpoint id="mongoStorageFindAll" uri="mongodb:mongoDb?database=vento&amp;collection=reports&amp;operation=findAll" />
+        <endpoint id="mongoStorageSave" uri="mongodb:mongoDb?database=vento&amp;collection=reports&amp;operation=save" />
     </camelContext>
 
 </beans>

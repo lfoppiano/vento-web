@@ -25,7 +25,7 @@ public class TestingRoute extends RouteBuilder {
     private Endpoint trainingTemp;
 
 */
-    @EndpointInject(ref = "mongoConnector")
+    @EndpointInject(ref = "mongoStorageFindAll")
     private Endpoint mongoConnector;
 
     @EndpointInject(ref = "rejectLocation")
@@ -34,16 +34,16 @@ public class TestingRoute extends RouteBuilder {
     @EndpointInject(ref = "mongoQueryTesting")
     private Endpoint mongoQueryTesting;
 
-    @EndpointInject(ref = "mongoUpdateClassification")
+    @EndpointInject(ref = "mongoStorageSave")
     private Endpoint mongoUpdateTesting;
 
     @Override
     public void configure() throws Exception {
 
-        errorHandler(
+        /*errorHandler(
                 deadLetterChannel(rejectEndpoint)
                         .retryAttemptedLogLevel(LoggingLevel.WARN)
-        );
+        );*/
 
         from(mongoQueryTesting)
                 .routeId("Testing (evaluation) route")
