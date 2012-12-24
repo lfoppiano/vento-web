@@ -7,11 +7,10 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mongodb.MongoDbConstants;
-import org.apache.camel.processor.aggregate.AggregationStrategy;
 import org.vento.gate.GateBatchProcessing;
-import org.vento.model.Twit;
 import org.vento.semantic.sentiment.SentiBatchProcessingImpl;
 import org.vento.training.TrainingQueueAggregationStrategy;
+import org.vento.utility.VentoTypes;
 
 import java.io.File;
 import java.net.URL;
@@ -37,6 +36,10 @@ public class TrainingRoute extends RouteBuilder {
     @EndpointInject(ref = "mongoConnector")
     private Endpoint mongoConnector;
 
+    @EndpointInject(ref = "storageTypeUpdate")
+    private Endpoint storageTypeUpdate;
+
+
     @Override
     public void configure() throws Exception {
 
@@ -48,14 +51,14 @@ public class TrainingRoute extends RouteBuilder {
         from(mongoQueryTraining)
                 .routeId("Training input extraction")
                 .convertBodyTo(String.class)
-                .setHeader(MongoDbConstants.LIMIT, constant(500))
+                .setHeader(MongoDbConstants.LIMIT, constant(10))
                 .to(mongoConnector)
                 .split(body())
                 .log("${body.get(\"twitterId\")} - ${body.get(\"text\")} - ${body.get(\"score\")} - ${body.get(\"type\")} ")
                 .processRef("trainingDataPreprocessor")
                 .to(trainingTemp)
                 .setHeader("aggregationId", constant("bao"))
-                .aggregate(header("aggregationId"), new TrainingQueueAggregationStrategy()).completionSize(500)
+                .aggregate(header("aggregationId"), new TrainingQueueAggregationStrategy()).completionSize(10)
                 .log("I have finished to aggregate 1000 elements! Run the training! ${body}")
                 .process(new Processor() {
                     private GateBatchProcessing gateBatchProcessing;
@@ -66,7 +69,8 @@ public class TrainingRoute extends RouteBuilder {
                         String dataStoreDir = "file:/tmp/twitter/tempTrainingStore";
 
                         gateBatchProcessing = new SentiBatchProcessingImpl(
-                                new File("/Applications/GATE_Developer_7.0"),
+                                //new File("/Applications/GATE_Developer_7.0"),
+                                new File("/Applications/gate-7.1-build4485-BIN"),
                                 new File("/opt/local/gate-training/batch-learning.training.configuration.xml"),
                                 dataStoreDir,
                                 "trainingCorpus");
@@ -75,6 +79,26 @@ public class TrainingRoute extends RouteBuilder {
                         gateBatchProcessing.perform();
                     }
                 })
-                .log("Finish training!");
+                .log("Finish training! Updating stored data.")
+                .split().tokenize("\n")
+                .log("Processing ${body}")
+                .process(new Processor() {
+                    @Override
+                    public void process(Exchange exchange) throws Exception {
+                        exchange.getIn().setBody("{ \"twitterId\" : \"" + exchange.getIn().getBody() + "\"}", String.class);
+                    }
+                })
+                .convertBodyTo(String.class)
+                .log("Retrieving query ${body}")
+                .to(mongoConnector)
+                .split(body())
+                .process(new Processor() {
+                    @Override
+                    public void process(Exchange exchange) throws Exception {
+                        DBObject inBody = (DBObject) exchange.getIn().getBody();
+                        inBody.put("type", VentoTypes.TRAINING_STORESET);
+                    }
+                })
+                .to(storageTypeUpdate);
     }
 }

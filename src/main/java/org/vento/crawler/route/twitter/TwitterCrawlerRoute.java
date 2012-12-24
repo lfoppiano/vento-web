@@ -20,7 +20,6 @@ import java.util.UUID;
 
 public class TwitterCrawlerRoute extends RouteBuilder {
 
-
     @EndpointInject(ref = "sourceFileQuery")
     private Endpoint sourceFileQuery;
 

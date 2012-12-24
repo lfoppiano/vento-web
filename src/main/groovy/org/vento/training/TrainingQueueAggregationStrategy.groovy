@@ -1,6 +1,7 @@
 package org.vento.training
 
 import org.apache.camel.Exchange
+import org.apache.camel.Message
 import org.apache.camel.processor.aggregate.AggregationStrategy
 
 /**
@@ -16,12 +17,17 @@ public class TrainingQueueAggregationStrategy implements AggregationStrategy {
         Integer counter = 1;
 
         if (oldExchange != null) {
-            counter = ((Integer) oldExchange.getIn().getBody());
+            Message input = oldExchange.getIn()
+            counter = ((Integer) input.getHeader('counter'));
             counter++;
-            oldExchange.getIn().setBody(counter);
+            input.setHeader('counter', counter);
+            String newBody = input.getBody(String.class) + "\n" + newExchange.getIn().getHeader('twitterId', String.class);
+            input.setBody(newBody)
             return oldExchange;
         } else {
-            newExchange.getIn().setBody(counter);
+            newExchange.getIn().setHeader('counter', counter);
+            Message input = newExchange.getIn()
+            input.setBody(input.getHeader('twitterId', String.class));
             return newExchange;
         }
     }

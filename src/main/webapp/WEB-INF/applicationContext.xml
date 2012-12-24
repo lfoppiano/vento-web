@@ -69,9 +69,10 @@
         <endpoint id="mongoUpdateClassification" uri="mongodb:mongoDb?database=vento&amp;collection=reports&amp;operation=save" />
 
         <!-- Training route -->
-        <endpoint id="mongoQueryTraining" uri="file:src/data/in?fileName=mongoQueryTraining.txt&amp;noop=true&amp;idempotent=false&amp;delay=60000" />
+        <endpoint id="mongoQueryTraining" uri="file:src/data/in?fileName=mongoQueryTraining.txt&amp;noop=true&amp;idempotent=false&amp;delay=600000" />
         <endpoint id="mongoConnector" uri="mongodb:mongoDb?database=vento&amp;collection=reports&amp;operation=findAll" />
         <endpoint id="trainingTemp" uri="file:${training.dir}?fileName=training-$simple{date:now:yyMMddHHmmssSSSS}.xml" />
+        <endpoint id="storageTypeUpdate" uri="mongodb:mongoDb?database=vento&amp;collection=reports&amp;operation=save" />
     </camelContext>
 
 </beans>

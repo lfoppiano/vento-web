@@ -18,9 +18,12 @@ class TrainingDataPreprocessor implements Processor{
     public void process(Exchange exchange) throws Exception {
         Twit twit = new Twit();
         DBObject inBody = (DBObject) exchange.getIn().getBody();
+
         twit.setText((String) inBody.get("text"));
-        twit.setTwitterId((String) inBody.get("twitterId"));
+        String twitterId = (String) inBody.get("twitterId")
+        twit.setTwitterId(twitterId);
         twit.setScore((String) inBody.get("score"));
         exchange.getIn().setBody(twit);
+        exchange.getIn().setHeader('twitterId', twitterId)
     }
 }
