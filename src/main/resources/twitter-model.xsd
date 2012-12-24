@@ -29,7 +29,15 @@
         </xs:complexType>
     </xs:element>
 
+    <xs:complexType name="ScoreHistory">
+        <xs:sequence>
+            <xs:element name="timestamp" type="xs:dateTime" />
+            <xs:element name="value" type="xs:string" />
+        </xs:sequence>
+    </xs:complexType>
+
     <xs:element name="twit" type="Twit" />
+    <xs:element name="scoreHistory" type="ScoreHistory" />
 
     <!-- TODO: Add the type of the Twit (twitter, facebook, amazon review -->
     <!-- TODO: rename it to make it more generic -->
@@ -48,7 +56,7 @@
             <!-- To use as score with manually classified twits -->
             <xs:element name="reference_score" type="xs:string" minOccurs="0" />
             <!-- timestamp to make it required, in future -->
-            <xs:element name="created_at" type="xs:string" minOccurs="0"/>
+            <xs:element ref="scoreHistory" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
 
