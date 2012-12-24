@@ -21,8 +21,16 @@
         <property name="gateConfigFile"  value="/opt/local/gate/batch-learning.classification.configuration.xml" />
         <property name="corpusName" value="classificationTestCorpus" />
     </bean>
+
+    <bean id="gateEvaluationClassifier" class="org.vento.semantic.sentiment.SentiBatchClassificationImpl">
+        <property name="gateHome" value="E:/gateWorkspace/GATE_Developer_7.1/" />
+        <property name="gateConfigFile"  value="E:/gateWorkspace/gate-project-evaluationClassification/batch-learning.classification.configuration.xml" />
+        <property name="corpusName" value="evaluationTestCorpus" />
+    </bean>
+
     <bean id="gateClassifierProcessor" class="org.vento.crawler.processor.SentiBatchClassificationProcessor">
         <property name="classifier" ref="gateClassifier"/>
+        <property name="evaluationClassifier" ref="gateEvaluationClassifier"/>
     </bean>
 
     <bean id="simpleClassifier" class="org.vento.semantic.sentiment.SentiBatchClassificationSimpleImpl">

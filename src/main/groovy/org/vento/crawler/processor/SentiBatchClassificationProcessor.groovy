@@ -23,6 +23,7 @@ import java.io.IOException;import java.lang.*;import java.lang.Exception;import 
 public class SentiBatchClassificationProcessor implements Processor {
 
     private SimpleBatchClassification classifier;
+    private SimpleBatchClassification evaluationClassifier;
 
     @Override
     public void process(Exchange exchange) throws Exception {
@@ -51,10 +52,21 @@ public class SentiBatchClassificationProcessor implements Processor {
 
         DBObject twit = exchange.getIn().getBody(DBObject.class);
 
-        Double result = classifier.simpleClassify(twit.get("text"));
+        String origin = (String) exchange.getIn().getHeader("origin");
+        Double result = 0.0;
+
+        if (origin.equals("classification")) {
+
+                result = classifier.simpleClassify(twit.get("text"));
+                twit.put("type", VentoTypes.CLASSIFICATION);
+        }
+           else
+                if (origin.equals("evaluation")) {
+                    result = evaluationClassifier.simpleClassify(twit.get("text"));
+                    //twit.put("type", VentoTypes.CLASSIFICATION); //TODO: other type, to be decided later
+                }
 
         twit.put("score", result.toString());
-        twit.put("type", VentoTypes.CLASSIFICATION)
 
         exchange.getIn().setBody(twit);
     }
@@ -65,5 +77,13 @@ public class SentiBatchClassificationProcessor implements Processor {
 
     public void setClassifier(SimpleBatchClassification classifier) {
         this.classifier = classifier;
+    }
+
+    public SimpleBatchClassification getEvaluationClassifier() {
+        return evaluationClassifier;
+    }
+
+    public void setEvaluationClassifier(SimpleBatchClassification evaluationClassifier) {
+        this.evaluationClassifier = evaluationClassifier;
     }
 }
