@@ -1,17 +1,20 @@
 package org.vento.crawler.route;
 
 import com.mongodb.DBObject;
-import org.apache.camel.*;
+import org.apache.camel.Endpoint;
+import org.apache.camel.EndpointInject;
+import org.apache.camel.Exchange;
+import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mongodb.MongoDbConstants;
-import org.codehaus.groovy.runtime.WritableFile;
+import org.apache.camel.processor.aggregate.AggregationStrategy;
 import org.vento.gate.GateBatchProcessing;
 import org.vento.model.Twit;
 import org.vento.semantic.sentiment.SentiBatchProcessingImpl;
+import org.vento.training.TrainingQueueAggregationStrategy;
 
 import java.io.File;
 import java.net.URL;
-import java.util.UUID;
 
 /**
  * Created with IntelliJ IDEA.
@@ -37,10 +40,10 @@ public class TrainingRoute extends RouteBuilder {
     @Override
     public void configure() throws Exception {
 
-        errorHandler(
+        /*errorHandler(
                 deadLetterChannel(rejectEndpoint)
                         .retryAttemptedLogLevel(LoggingLevel.WARN)
-        );
+        );*/
 
         from(mongoQueryTraining)
                 .routeId("Training input extraction")
@@ -49,37 +52,29 @@ public class TrainingRoute extends RouteBuilder {
                 .to(mongoConnector)
                 .split(body())
                 .log("${body.get(\"twitterId\")} - ${body.get(\"text\")} - ${body.get(\"score\")} - ${body.get(\"type\")} ")
-                //.convertBodyTo(String.class)
-                .process(new Processor() {
-                    @Override
-                    public void process(Exchange exchange) throws Exception {
-                        Twit twit = new Twit();
-                        DBObject inBody = (DBObject) exchange.getIn().getBody();
-                        twit.setText((String) inBody.get("text"));
-                        twit.setTwitterId((String) inBody.get("twitterId"));
-                        twit.setScore((String) inBody.get("score"));
-                        exchange.getIn().setBody(twit);
-                    }
-                })
-                .to(trainingTemp);
-                //.setBody(simple("blablaValue"))
-
-           from(mongoQueryTraining) //TODO: works but had to decouple the routes, this one has to run only once and has to be something smarter, just a temp solution
-                .routeId("Training execution")
+                .processRef("trainingDataPreprocessor")
+                .to(trainingTemp)
+                .setHeader("aggregationId", constant("bao"))
+                .aggregate(header("aggregationId"), new TrainingQueueAggregationStrategy()).completionSize(500)
+                .log("I have finished to aggregate 1000 elements! Run the training! ${body}")
                 .process(new Processor() {
                     private GateBatchProcessing gateBatchProcessing;
 
-                    @Override                                              //TODO: all paths from windows, have to be changed and put into config
+                    @Override
+                    //TODO: all paths from windows, have to be changed and put into config
                     public void process(Exchange exchange) throws Exception {
+                        String dataStoreDir = "file:/tmp/twitter/tempTrainingStore";
+
                         gateBatchProcessing = new SentiBatchProcessingImpl(
-                                new File("E:/gateWorkspace/GATE_Developer_7.1/"),
-                                new File("E:/gateWorkspace/gate-project-training/batch-learning.training.configuration.xml"),
-                                "file:/E:/tmp/twitter/tempTrainingStore",
+                                new File("/Applications/GATE_Developer_7.0"),
+                                new File("/opt/local/gate-training/batch-learning.training.configuration.xml"),
+                                dataStoreDir,
                                 "trainingCorpus");
 
-                        gateBatchProcessing.addAllToCorpus(new URL("file:/E:/tmp/twitter/training"), "xml");
+                        gateBatchProcessing.addAllToCorpus(new URL("file:/tmp/twitter/training"), "xml");
                         gateBatchProcessing.perform();
                     }
-                });
+                })
+                .log("Finish training!");
     }
 }
