@@ -7,6 +7,7 @@ import org.apache.camel.Processor
 import org.vento.model.Twit
 import org.vento.model.Twits
 import org.vento.amazon.utility.StringProcessor
+import org.vento.utility.VentoTypes
 
 public class TwitterPreprocessor implements Processor {
     public void process(Exchange exchange) throws Exception {
@@ -30,6 +31,7 @@ public class TwitterPreprocessor implements Processor {
             twit.source = result.source
             twit.isoLanguageCode = result.iso_language_code
             twit.geo =  result.geo
+            twit.type = VentoTypes.CLASSIFICATION
             root.twits.add(twit)
         }
         exchange.getOut().setBody(root)
