@@ -1,6 +1,5 @@
 package org.vento.crawler.processor
 
-import com.mongodb.BasicDBObject
 import com.mongodb.DBObject;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
@@ -24,72 +23,22 @@ import java.io.IOException;import java.lang.*;import java.lang.Exception;import 
 public class SentiBatchClassificationProcessor implements Processor {
 
     private SimpleBatchClassification classifier;
-    private SimpleBatchClassification evaluationClassifier;
 
     @Override
     public void process(Exchange exchange) throws Exception {
-        //String input = (String) exchange.getIn().getBody();
-        /*
-        BufferedWriter out = null;
-        File temp = null;
 
-        try {
-            // Create temp file.
-            temp = File.createTempFile("gate-classifier", ".xml");
+        DBObject twit = exchange.getIn().getBody(DBObject.class);
 
-            // Delete temp file when program exits.
-            temp.deleteOnExit();
+        Double result = classifier.simpleClassify(twit.get("text"));
 
-            // Write to temp file
-            out = new BufferedWriter(new FileWriter(temp));
-            out.write(input);
-
-        } catch (IOException e) {
-            System.out.println("Ma che cazzo!");
-        } finally {
-            out.close();
-        }
-*/
-
-        DBObject twit = exchange.getIn().getBody(DBObject.class)
-
-        String origin = (String) exchange.getIn().getHeader("origin")
-        Double result = 0.0;
-
-        if (origin.equals("classification")) {
-
-                result = classifier.simpleClassify(twit.get("text"))
-                twit.put("type", VentoTypes.CLASSIFICATION)
-                twit.put("score", result.toString())
-        }
-           else
-                if (origin.equals("evaluation")) {
-                    result = evaluationClassifier.simpleClassify(twit.get("text"));
-                    twit.put("type", VentoTypes.TESTING) //maybe not neccessary, it should be already set
-                    BasicDBObject tempScore = new BasicDBObject()
-                    tempScore.put("value",result)
-                    tempScore.put("timestamp",exchange.getIn().getHeader("timestamp"))
-                    def tmpHistoryList = (List)twit.get("score-history")
-                    if (!tmpHistoryList) tmpHistoryList = [] //should be set before already, if not, this is
-                    twit.put("score-history",tmpHistoryList.add(tempScore)) //a failsafe
-                }
+        twit.put("score", result.toString());
+        twit.put("type", VentoTypes.CLASSIFICATION)
 
         exchange.getIn().setBody(twit);
     }
 
-    public SimpleBatchClassification getClassifier() {
-        return classifier;
-    }
 
     public void setClassifier(SimpleBatchClassification classifier) {
         this.classifier = classifier;
-    }
-
-    public SimpleBatchClassification getEvaluationClassifier() {
-        return evaluationClassifier;
-    }
-
-    public void setEvaluationClassifier(SimpleBatchClassification evaluationClassifier) {
-        this.evaluationClassifier = evaluationClassifier;
     }
 }

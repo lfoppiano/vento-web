@@ -31,13 +31,16 @@
 
     <bean id="gateEvaluationClassifier" class="org.vento.semantic.sentiment.SentiBatchClassificationImpl">
         <property name="gateHome" value="${gate.home}" />
-        <property name="gateConfigFile"  value="${gate.evaluationClassification}" />
+        <property name="gateConfigFile"  value="${gate.evaluation}" />
         <property name="corpusName" value="evaluationTestCorpus" />
     </bean>
 
     <bean id="gateClassifierProcessor" class="org.vento.crawler.processor.SentiBatchClassificationProcessor">
         <property name="classifier" ref="gateClassifier"/>
-        <property name="evaluationClassifier" ref="gateEvaluationClassifier"/>
+    </bean>
+
+    <bean id="gateEvaluationProcessor" class="org.vento.crawler.processor.SentiBatchEvaluationProcessor">
+        <property name="classifier" ref="gateEvaluationClassifier" />
     </bean>
 
     <!--bean id="gateTrainingProcessor" class="org.vento.training.processor.SentiBatchTrainingProcessor">

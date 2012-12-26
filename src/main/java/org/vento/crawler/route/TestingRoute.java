@@ -23,14 +23,13 @@ import java.net.URL;
  */
 public class TestingRoute extends RouteBuilder {
 
-/*
-    @EndpointInject(ref = "trainingTemp")
-    private Endpoint trainingTemp;
+    /*
+        @EndpointInject(ref = "trainingTemp")
+        private Endpoint trainingTemp;
 
-*/
+    */
     @EndpointInject(ref = "mongoStorageFindAll")
     private Endpoint mongoConnector;
-
     @EndpointInject(ref = "rejectLocation")
     private Endpoint rejectEndpoint;
 
@@ -39,6 +38,8 @@ public class TestingRoute extends RouteBuilder {
 
     @EndpointInject(ref = "mongoStorageSave")
     private Endpoint mongoUpdateTesting;
+
+    private final int BATH_FETCH_LIMIT = 10;
 
     @Override
     public void configure() throws Exception {
@@ -49,29 +50,15 @@ public class TestingRoute extends RouteBuilder {
         );*/
 
         from(mongoQueryTesting)
-                .setHeader("timestamp")
-                .simple("${date:now:yyyyMMdd hh:mm:ss}") //has to be set only once, not sure how to do it now
                 .routeId("Testing (evaluation) route")
                 .convertBodyTo(String.class)
-                .setHeader(MongoDbConstants.LIMIT, constant(10))
+                .setHeader("timestamp").simple("${date:now:yyyyMMdd hh:mm:ss}") //has to be set only once, not sure how to do it now
+                .setHeader(MongoDbConstants.LIMIT, constant(BATH_FETCH_LIMIT))
                 .to(mongoConnector)
                 .split(body())
                 .log("${body.get(\"twitterId\")} - ${body.get(\"text\")} - ${body.get(\"score\")} - ${body.get(\"type\")} ")
                 .setHeader("origin").simple("evaluation")
-                .processRef("gateClassifierProcessor")
-                /*.convertBodyTo(Twit.class)
-                .process(new Processor() {
-                    @Override
-                    public void process(Exchange exchange) throws Exception {
-                        Twit element = (Twit) exchange.getIn().getBody();
-
-                        ScoreHistory scoreElement = new ScoreHistory();
-                        //scoreElement.setTimestamp();
-                        scoreElement.setValue(element.getScore());
-
-                        element.getScoreHistories().add(scoreElement);
-                    }
-                })*/
+                .processRef("gateEvaluationProcessor")
                 .to(mongoUpdateTesting);
     }
 }
