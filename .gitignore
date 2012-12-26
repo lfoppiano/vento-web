@@ -4,3 +4,4 @@ target
 overlays
 .iml
 vento-web.iml
+*.camelLock
