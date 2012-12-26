@@ -1,13 +1,16 @@
 package org.vento.crawler.route;
 
 import com.mongodb.DBObject;
+import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 import org.apache.camel.*;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mongodb.MongoDbConstants;
 import org.vento.gate.GateBatchProcessing;
+import org.vento.model.ScoreHistory;
 import org.vento.model.Twit;
 import org.vento.semantic.sentiment.SentiBatchProcessingImpl;
 
+import javax.xml.datatype.XMLGregorianCalendar;
 import java.io.File;
 import java.net.URL;
 
@@ -50,13 +53,25 @@ public class TestingRoute extends RouteBuilder {
                 .simple("${date:now:yyyyMMdd hh:mm:ss}") //has to be set only once, not sure how to do it now
                 .routeId("Testing (evaluation) route")
                 .convertBodyTo(String.class)
-                .setHeader(MongoDbConstants.LIMIT, constant(500))
+                .setHeader(MongoDbConstants.LIMIT, constant(10))
                 .to(mongoConnector)
                 .split(body())
                 .log("${body.get(\"twitterId\")} - ${body.get(\"text\")} - ${body.get(\"score\")} - ${body.get(\"type\")} ")
-                .setHeader("origin")
-                .simple("evaluation")
+                .setHeader("origin").simple("evaluation")
                 .processRef("gateClassifierProcessor")
+                /*.convertBodyTo(Twit.class)
+                .process(new Processor() {
+                    @Override
+                    public void process(Exchange exchange) throws Exception {
+                        Twit element = (Twit) exchange.getIn().getBody();
+
+                        ScoreHistory scoreElement = new ScoreHistory();
+                        //scoreElement.setTimestamp();
+                        scoreElement.setValue(element.getScore());
+
+                        element.getScoreHistories().add(scoreElement);
+                    }
+                })*/
                 .to(mongoUpdateTesting);
     }
 }

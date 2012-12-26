@@ -16,6 +16,7 @@ import org.apache.camel.component.mongodb.MongoDbConstants;
  */
 public class ClassificationRoute extends RouteBuilder {
 
+    private final int BATHC_FETCH_LIMIT = 500;
     @EndpointInject(ref = "rejectLocation")
     private Endpoint rejectEndpoint;
 
@@ -39,7 +40,7 @@ public class ClassificationRoute extends RouteBuilder {
         from(mongoQueryClassification)
                 .routeId("Sentiment classification")
                 .convertBodyTo(String.class)
-                .setHeader(MongoDbConstants.LIMIT, constant(500))
+                .setHeader(MongoDbConstants.LIMIT, constant(BATHC_FETCH_LIMIT))
                 .to(mongoFindAllClassification)
                 .split(body())
                 .setHeader("origin")
