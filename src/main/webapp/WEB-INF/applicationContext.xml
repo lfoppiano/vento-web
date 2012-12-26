@@ -31,7 +31,7 @@
 
     <bean id="gateEvaluationClassifier" class="org.vento.semantic.sentiment.SentiBatchClassificationImpl">
         <property name="gateHome" value="${gate.home}" />
-        <property name="gateConfigFile"  value="${gate.classification}" />
+        <property name="gateConfigFile"  value="${gate.evaluationClassification}" />
         <property name="corpusName" value="evaluationTestCorpus" />
     </bean>
 

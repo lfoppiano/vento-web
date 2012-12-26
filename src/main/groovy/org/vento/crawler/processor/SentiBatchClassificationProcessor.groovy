@@ -1,5 +1,6 @@
 package org.vento.crawler.processor
 
+import com.mongodb.BasicDBObject
 import com.mongodb.DBObject;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
@@ -50,23 +51,26 @@ public class SentiBatchClassificationProcessor implements Processor {
         }
 */
 
-        DBObject twit = exchange.getIn().getBody(DBObject.class);
+        DBObject twit = exchange.getIn().getBody(DBObject.class)
 
-        String origin = (String) exchange.getIn().getHeader("origin");
+        String origin = (String) exchange.getIn().getHeader("origin")
         Double result = 0.0;
 
         if (origin.equals("classification")) {
 
-                result = classifier.simpleClassify(twit.get("text"));
-                twit.put("type", VentoTypes.CLASSIFICATION);
+                result = classifier.simpleClassify(twit.get("text"))
+                twit.put("type", VentoTypes.CLASSIFICATION)
+                twit.put("score", result.toString())
         }
            else
                 if (origin.equals("evaluation")) {
                     result = evaluationClassifier.simpleClassify(twit.get("text"));
-                    //twit.put("type", VentoTypes.CLASSIFICATION); //TODO: other type, to be decided later
+                    twit.put("type", VentoTypes.TESTING) //maybe not neccessary, it should be already set
+                    BasicDBObject tempScore = new BasicDBObject()
+                    tempScore.put("value",result)
+                    tempScore.put("timestamp",exchange.getIn().getHeader("timestamp"))
+                    ((List)twit.get("score-history")).add(tempScore)
                 }
-
-        twit.put("score", result.toString());
 
         exchange.getIn().setBody(twit);
     }

@@ -46,6 +46,8 @@ public class TestingRoute extends RouteBuilder {
         );*/
 
         from(mongoQueryTesting)
+                .setHeader("timestamp")
+                .simple("${date:now:yyyyMMdd hh:mm:ss}") //has to be set only once, not sure how to do it now
                 .routeId("Testing (evaluation) route")
                 .convertBodyTo(String.class)
                 .setHeader(MongoDbConstants.LIMIT, constant(500))
