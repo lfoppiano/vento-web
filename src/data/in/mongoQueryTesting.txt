@@ -1,1 +1,1 @@
-{ "type": "testing" }
+{ "type": "testing", "referenceScore" : {$ne : null}}
