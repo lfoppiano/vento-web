@@ -19,7 +19,16 @@ class SentiBatchTrainingProcessor implements Processor{
     //TODO: all paths from windows, have to be changed and put into config
     @Override
     public void process(Exchange exchange) throws Exception {
-        engine.addAllToCorpus(new URL(corpusDirectory), "xml");
+        String dataStoreDir = "file:/tmp/twitter/tempTrainingStore";
+
+        engine = new SentiBatchProcessingImpl(
+                //new File("/Applications/GATE_Developer_7.0"),
+                new File("/Applications/gate-7.1-build4485-BIN"),
+                new File("/opt/local/gate-training/batch-learning.training.configuration.xml"),
+                dataStoreDir,
+                "trainingCorpus");
+
+        engine.addAllToCorpus(new URL("file:/tmp/twitter/training"), "xml");
         engine.perform();
     }
 
@@ -38,7 +47,5 @@ class SentiBatchTrainingProcessor implements Processor{
     void setCorpusDirectory(String corpusDirectory) {
         this.corpusDirectory = corpusDirectory
     }
-
-
 }
 

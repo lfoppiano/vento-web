@@ -10,6 +10,7 @@ import org.apache.camel.component.mongodb.MongoDbConstants;
 import org.vento.gate.GateBatchProcessing;
 import org.vento.semantic.sentiment.SentiBatchProcessingImpl;
 import org.vento.training.TrainingQueueAggregationStrategy;
+import org.vento.training.processor.SentiBatchTrainingProcessor;
 import org.vento.utility.VentoTypes;
 
 import java.io.File;
@@ -49,7 +50,7 @@ public class TrainingRoute extends RouteBuilder {
         );*/
 
         from(mongoQueryTraining)
-                .routeId("Training input extraction")
+                .routeId("Training route")
                 .convertBodyTo(String.class)
                 .setHeader(MongoDbConstants.LIMIT, constant(10))
                 .to(mongoConnector)
@@ -60,7 +61,8 @@ public class TrainingRoute extends RouteBuilder {
                 .setHeader("aggregationId", constant("bao"))
                 .aggregate(header("aggregationId"), new TrainingQueueAggregationStrategy()).completionSize(10)
                 .log("I have finished to aggregate 1000 elements! Run the training! ${body}")
-                .processRef("gateTrainingProcessor")
+                //.processRef("gateTrainingProcessor")
+                .process(new SentiBatchTrainingProcessor())
                 .log("Finish training! Updating stored data.")
                 .split().tokenize("\n")
                 .log("Processing ${body}")
