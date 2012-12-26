@@ -14,34 +14,45 @@ import org.vento.semantic.sentiment.SentiBatchProcessingImpl
  */
 class SentiBatchTrainingProcessor implements Processor{
     private GateBatchProcessing engine;
+
+    private String gateHome;
+    private String projectConfigFile;
+    private String dataStoreDir;
+    private String corpusName;
     private String corpusDirectory;
 
-    //TODO: all paths from windows, have to be changed and put into config
     @Override
     public void process(Exchange exchange) throws Exception {
         String dataStoreDir = "file:/tmp/twitter/tempTrainingStore";
 
         engine = new SentiBatchProcessingImpl(
-                //new File("/Applications/GATE_Developer_7.0"),
-                new File("/Applications/gate-7.1-build4485-BIN"),
-                new File("/opt/local/gate-training/batch-learning.training.configuration.xml"),
-                dataStoreDir,
-                "trainingCorpus");
+                new File(gateHome),
+                new File(projectConfigFile),
+                this.dataStoreDir,
+                corpusName);
 
         engine.addAllToCorpus(new URL("file:/tmp/twitter/training"), "xml");
         engine.perform();
-    }
-
-    GateBatchProcessing getEngine() {
-        return engine
     }
 
     void setEngine(GateBatchProcessing engine) {
         this.engine = engine
     }
 
-    String getCorpusDirectory() {
-        return corpusDirectory
+    void setGateHome(String gateHome) {
+        this.gateHome = gateHome
+    }
+
+    void setProjectConfigFile(String projectConfigFile) {
+        this.projectConfigFile = projectConfigFile
+    }
+
+    void setDataStoreDir(String dataStoreDir) {
+        this.dataStoreDir = dataStoreDir
+    }
+
+    void setCorpusName(String corpusName) {
+        this.corpusName = corpusName
     }
 
     void setCorpusDirectory(String corpusDirectory) {
