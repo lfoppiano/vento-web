@@ -69,7 +69,9 @@ public class SentiBatchClassificationProcessor implements Processor {
                     BasicDBObject tempScore = new BasicDBObject()
                     tempScore.put("value",result)
                     tempScore.put("timestamp",exchange.getIn().getHeader("timestamp"))
-                    ((List)twit.get("score-history")).add(tempScore)
+                    def tmpHistoryList = (List)twit.get("score-history")
+                    if (!tmpHistoryList) tmpHistoryList = [] //should be set before already, if not, this is
+                    twit.put("score-history",tmpHistoryList.add(tempScore)) //a failsafe
                 }
 
         exchange.getIn().setBody(twit);
