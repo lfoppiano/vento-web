@@ -41,6 +41,8 @@ public class TrainingRoute extends RouteBuilder {
     private Endpoint storageTypeUpdate;
 
     private final int QUERY_FETCH_LIMIT = 10;
+    //TODO: make it configurable
+    private int trainingBatchLimit = QUERY_FETCH_LIMIT;
 
 
     @Override
@@ -61,7 +63,7 @@ public class TrainingRoute extends RouteBuilder {
                 .processRef("trainingDataPreprocessor")
                 .to(trainingTemp)
                 .setHeader("aggregationId", constant("bao"))
-                .aggregate(header("aggregationId"), new TrainingQueueAggregationStrategy()).completionSize(QUERY_FETCH_LIMIT)
+                .aggregate(header("aggregationId"), new TrainingQueueAggregationStrategy()).completionSize(trainingBatchLimit)
                 //.log("I have finished to aggregate 1000 elements! Run the training! ${body}")
                 //.processRef("gateTrainingProcessor")
                 .process(new SentiBatchTrainingProcessor())
@@ -86,5 +88,9 @@ public class TrainingRoute extends RouteBuilder {
                     }
                 })
                 .to(storageTypeUpdate);
+    }
+
+    public void setTrainingBatchLimit(int trainingBatchLimit) {
+        this.trainingBatchLimit = trainingBatchLimit;
     }
 }
