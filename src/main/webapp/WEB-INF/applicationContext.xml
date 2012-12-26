@@ -46,9 +46,9 @@
     <bean id="gateTrainingProcessor" class="org.vento.training.processor.SentiBatchTrainingProcessor">
         <property name="gateHome" value="${gate.home}" />
         <property name="projectConfigFile"  value="${gate.training}" />
-        <property name="dataStoreDir" value="file:/tmp/twitter/tempTrainingStore" />
+        <property name="dataStoreDir" value="${gate.training.datastore}" />
         <property name="corpusName" value="trainingCorpus" />
-        <property name="corpusDirectory" value="file:/tmp/twitter/training" />
+        <property name="corpusDirectory" value="${gate.training.corpusDirectory}" />
     </bean>
 
     <bean id="simpleClassifier" class="org.vento.semantic.sentiment.SentiBatchClassificationSimpleImpl">
