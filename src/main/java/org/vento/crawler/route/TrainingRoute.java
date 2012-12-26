@@ -40,6 +40,8 @@ public class TrainingRoute extends RouteBuilder {
     @EndpointInject(ref = "mongoStorageSave")
     private Endpoint storageTypeUpdate;
 
+    private final int QUERY_FETCH_LIMIT = 10;
+
 
     @Override
     public void configure() throws Exception {
@@ -52,15 +54,15 @@ public class TrainingRoute extends RouteBuilder {
         from(mongoQueryTraining)
                 .routeId("Training route")
                 .convertBodyTo(String.class)
-                .setHeader(MongoDbConstants.LIMIT, constant(10))
+                .setHeader(MongoDbConstants.LIMIT, constant(QUERY_FETCH_LIMIT))
                 .to(mongoConnector)
                 .split(body())
                 .log("${body.get(\"twitterId\")} - ${body.get(\"text\")} - ${body.get(\"score\")} - ${body.get(\"type\")} ")
                 .processRef("trainingDataPreprocessor")
                 .to(trainingTemp)
                 .setHeader("aggregationId", constant("bao"))
-                .aggregate(header("aggregationId"), new TrainingQueueAggregationStrategy()).completionSize(10)
-                .log("I have finished to aggregate 1000 elements! Run the training! ${body}")
+                .aggregate(header("aggregationId"), new TrainingQueueAggregationStrategy()).completionSize(QUERY_FETCH_LIMIT)
+                //.log("I have finished to aggregate 1000 elements! Run the training! ${body}")
                 //.processRef("gateTrainingProcessor")
                 .process(new SentiBatchTrainingProcessor())
                 .log("Finish training! Updating stored data.")
