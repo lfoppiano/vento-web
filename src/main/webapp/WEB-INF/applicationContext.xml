@@ -13,10 +13,10 @@
 
     <context:property-placeholder location="classpath:twitterCrawler.properties"/>
 
-    <bean id="twitterPreprocessor" class="org.vento.crawler.processor.TwitterPreprocessor" />
-    <bean id="trainingDataPreprocessor" class="org.vento.training.processor.TrainingDataPreprocessor" />
+    <bean id="twitterPreprocessor" class="org.vento.crawler.twitter.processor.TwitterPreprocessor" />
+    <bean id="trainingDataPreprocessor" class="org.vento.sentiment.training.processor.TrainingDataPreprocessor" />
 
-    <bean id="gateClassifier" class="org.vento.semantic.sentiment.SentiBatchClassificationImpl">
+    <bean id="gateClassifier" class="org.vento.sentiment.gate.SentiBatchClassificationImpl">
         <property name="gateHome" value="${gate.home}" />
         <property name="gateConfigFile"  value="${gate.classification}" />
         <property name="corpusName" value="classificationTestCorpus" />
@@ -29,21 +29,21 @@
         <constructor-arg name="corpusName" value="trainingCorpus" />
     </bean-->
 
-    <bean id="gateEvaluationClassifier" class="org.vento.semantic.sentiment.SentiBatchClassificationImpl">
+    <bean id="gateEvaluationClassifier" class="org.vento.sentiment.gate.SentiBatchClassificationImpl">
         <property name="gateHome" value="${gate.home}" />
         <property name="gateConfigFile"  value="${gate.evaluation}" />
         <property name="corpusName" value="evaluationTestCorpus" />
     </bean>
 
-    <bean id="gateClassifierProcessor" class="org.vento.crawler.processor.SentiBatchClassificationProcessor">
+    <bean id="gateClassifierProcessor" class="org.vento.sentiment.classification.SentiBatchClassificationProcessor">
         <property name="classifier" ref="gateClassifier"/>
     </bean>
 
-    <bean id="gateEvaluationProcessor" class="org.vento.crawler.processor.SentiBatchEvaluationProcessor">
+    <bean id="gateEvaluationProcessor" class="org.vento.sentiment.evaluation.SentiBatchEvaluationProcessor">
         <property name="classifier" ref="gateEvaluationClassifier" />
     </bean>
 
-    <bean id="gateTrainingProcessor" class="org.vento.training.processor.SentiBatchTrainingProcessor">
+    <bean id="gateTrainingProcessor" class="org.vento.sentiment.training.processor.SentiBatchTrainingProcessor">
         <property name="gateHome" value="${gate.home}" />
         <property name="projectConfigFile"  value="${gate.training}" />
         <property name="dataStoreDir" value="${gate.training.datastore}" />
@@ -51,11 +51,11 @@
         <property name="corpusDirectory" value="${gate.training.corpusDirectory}" />
     </bean>
 
-    <bean id="simpleClassifier" class="org.vento.semantic.sentiment.SentiBatchClassificationSimpleImpl">
+    <bean id="simpleClassifier" class="org.vento.sentiment.statistical.SentiBatchClassificationSimpleImpl">
         <property name="negativeWordFile" value="/opt/local/gate/negative_adj_list.txt" />
         <property name="positiveWordFile" value="/opt/local/gate/positive_adj_list.txt" />
     </bean>
-    <bean id="simpleClassifierProcessor" class="org.vento.crawler.processor.SentiBatchClassificationSimpleProcessor">
+    <bean id="simpleClassifierProcessor" class="org.vento.sentiment.classification.SentiBatchClassificationSimpleProcessor">
         <property name="classifier" ref="simpleClassifier"/>
     </bean>
 
@@ -73,7 +73,7 @@
             <property key="http.proxyAuthPassword" value="ribeira7" />
         </properties-->
 
-        <package>org.vento.crawler.route</package>
+        <package>org.vento.routes</package>
         <!--<package>org.vento.semantics.route</package>-->
 
         <!-- Twitter crawler -->

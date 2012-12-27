@@ -2,7 +2,6 @@ package org.vento.crawler.route;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
-import junit.framework.Assert;
 import org.apache.camel.*;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
@@ -14,6 +13,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.vento.routes.sentiment.TrainingRoute;
 
 import java.util.ArrayList;
 import java.util.List;
