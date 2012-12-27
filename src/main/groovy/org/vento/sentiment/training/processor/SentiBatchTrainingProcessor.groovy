@@ -2,6 +2,7 @@ package org.vento.sentiment.training.processor
 
 import org.apache.camel.Exchange
 import org.apache.camel.Processor
+import org.apache.commons.io.FileUtils
 import org.vento.sentiment.gate.GateBatchProcessing
 import org.vento.sentiment.gate.SentiBatchProcessingImpl
 
@@ -15,35 +16,38 @@ import org.vento.sentiment.gate.SentiBatchProcessingImpl
 class SentiBatchTrainingProcessor implements Processor{
     private GateBatchProcessing engine;
 
-    private String gateHome;
-    private String projectConfigFile;
+    private File gateHome;
+    private File projectConfigFile;
     private String dataStoreDir;
     private String corpusName;
-    private String corpusDirectory;
+    private URL corpusDirectory;
 
     @Override
     public void process(Exchange exchange) throws Exception {
-        String dataStoreDir = "file:/tmp/twitter/tempTrainingStore";
+        //String dataStoreDir = "file:/tmp/twitter/tempTrainingStore";
+        //def corpusDirectory = new URL("file:/tmp/twitter/training")
 
         engine = new SentiBatchProcessingImpl(
-                new File(gateHome),
-                new File(projectConfigFile),
+                gateHome,
+                projectConfigFile,
                 this.dataStoreDir,
                 corpusName);
 
-        engine.addAllToCorpus(new URL("file:/tmp/twitter/training"), "xml");
+        engine.addAllToCorpus(corpusDirectory, "xml");
         engine.perform();
+
+        FileUtils.cleanDirectory(new File(corpusDirectory.toURI()))
     }
 
     void setEngine(GateBatchProcessing engine) {
         this.engine = engine
     }
 
-    void setGateHome(String gateHome) {
+    void setGateHome(File gateHome) {
         this.gateHome = gateHome
     }
 
-    void setProjectConfigFile(String projectConfigFile) {
+    void setProjectConfigFile(File projectConfigFile) {
         this.projectConfigFile = projectConfigFile
     }
 
@@ -55,7 +59,7 @@ class SentiBatchTrainingProcessor implements Processor{
         this.corpusName = corpusName
     }
 
-    void setCorpusDirectory(String corpusDirectory) {
+    void setCorpusDirectory(URL corpusDirectory) {
         this.corpusDirectory = corpusDirectory
     }
 }
