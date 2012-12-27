@@ -1,18 +1,8 @@
 package org.vento.crawler.route;
 
-import com.mongodb.DBObject;
-import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 import org.apache.camel.*;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mongodb.MongoDbConstants;
-import org.vento.gate.GateBatchProcessing;
-import org.vento.model.ScoreHistory;
-import org.vento.model.Twit;
-import org.vento.semantic.sentiment.SentiBatchProcessingImpl;
-
-import javax.xml.datatype.XMLGregorianCalendar;
-import java.io.File;
-import java.net.URL;
 
 /**
  * Created with IntelliJ IDEA.

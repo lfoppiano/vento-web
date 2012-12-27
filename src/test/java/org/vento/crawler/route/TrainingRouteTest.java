@@ -45,6 +45,7 @@ public class TrainingRouteTest extends CamelTestSupport {
         camelContext.start();
     }
 
+    @Ignore
     @Test
     public void testMongoDbHeaderParameters() throws Exception{
         MockEndpoint mongoConnector = applicationContext.getBean("mongoConnector", MockEndpoint.class);

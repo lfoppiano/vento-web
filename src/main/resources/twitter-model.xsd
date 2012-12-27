@@ -58,6 +58,7 @@
             <!-- timestamp to make it required, in future -->
             <xs:element ref="scoreHistory" maxOccurs="unbounded"/>
             <xs:element name="type" type="xs:string" minOccurs="0" />
+            <xs:element name="created_at" type="xs:string" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
 

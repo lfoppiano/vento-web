@@ -2,10 +2,8 @@ package org.vento.crawler.processor
 
 import com.mongodb.DBObject;
 import org.apache.camel.Exchange;
-import org.apache.camel.Processor;
-import org.vento.gate.SimpleBatchClassification;
-import org.vento.model.Twit;
-import org.vento.semantic.sentiment.SentiBatchClassificationImpl
+import org.apache.camel.Processor
+import org.vento.sentiment.SimpleBatchClassification;
 import org.vento.utility.VentoTypes;
 
 import java.io.BufferedWriter;

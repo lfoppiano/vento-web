@@ -2,8 +2,8 @@ package org.vento.crawler.processor
 
 import org.apache.camel.Processor
 import org.apache.camel.Exchange
-import org.vento.gate.SimpleBatchClassification
 import org.vento.model.Twit
+import org.vento.sentiment.SimpleBatchClassification
 
 /**
  * Created with IntelliJ IDEA.

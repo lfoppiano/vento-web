@@ -4,7 +4,7 @@ import com.mongodb.BasicDBObject
 import com.mongodb.DBObject
 import org.apache.camel.Exchange
 import org.apache.camel.Processor
-import org.vento.gate.SimpleBatchClassification
+import org.vento.sentiment.SimpleBatchClassification
 import org.vento.utility.VentoTypes;
 
 /**

@@ -2,8 +2,8 @@ package org.vento.training.processor
 
 import org.apache.camel.Exchange
 import org.apache.camel.Processor
-import org.vento.gate.GateBatchProcessing
-import org.vento.semantic.sentiment.SentiBatchProcessingImpl
+import org.vento.sentiment.gate.GateBatchProcessing
+import org.vento.sentiment.gate.SentiBatchProcessingImpl
 
 /**
  * Created with IntelliJ IDEA.

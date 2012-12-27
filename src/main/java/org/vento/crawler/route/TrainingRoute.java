@@ -7,14 +7,10 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mongodb.MongoDbConstants;
-import org.vento.gate.GateBatchProcessing;
-import org.vento.semantic.sentiment.SentiBatchProcessingImpl;
 import org.vento.training.TrainingQueueAggregationStrategy;
 import org.vento.training.processor.SentiBatchTrainingProcessor;
 import org.vento.utility.VentoTypes;
 
-import java.io.File;
-import java.net.URL;
 
 /**
  * Created with IntelliJ IDEA.
