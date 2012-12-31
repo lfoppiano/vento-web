@@ -32,7 +32,7 @@ public class TwitterPreprocessor implements Processor {
             twit.isoLanguageCode = result.iso_language_code
             twit.geo =  result.geo
             twit.type = VentoTypes.CLASSIFICATION
-            twit.scoreHistories = new ArrayList<ScoreHistory>()
+            twit.getScoreHistories()
             root.twits.add(twit)
         }
         exchange.getOut().setBody(root)
