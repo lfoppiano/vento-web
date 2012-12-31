@@ -5,11 +5,12 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+       xmlns:mongo="http://www.springframework.org/schema/data/mongo" xmlns:gate="http://gate.ac.uk/ns/spring"
        xsi:schemaLocation="
                   http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
-                  http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
+                  http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
+                  http://gate.ac.uk/ns/spring http://gate.ac.uk/ns/spring.xsd">
 
     <context:property-placeholder location="classpath:twitterCrawler.properties"/>
 
@@ -64,6 +65,21 @@
         <constructor-arg index="1" name="port" value="27017" />
     </bean>
 
+
+    <!-- gate experiment -->
+    <gate:init gate-home="file:/gateWorkspace/GATE_Developer_7.1" />
+
+    <gate:duplicate id="classificationApp">
+        <gate:saved-application location="file:/gateWorkspace/gate-project-classification/batch-learning.classification.configuration.xml" />
+    </gate:duplicate>
+
+    <bean id="experimentalClassifier"
+          class="org.vento.sentiment.classification.SentiBatchExperimentalClassificationProcessor">
+        <property name="classifier" ref="classificationApp" />
+        <gate:pooled-proxy max-size="5" />
+    </bean>
+
+    <!-- gate experiment -->
 
     <camelContext xmlns="http://camel.apache.org/schema/spring" autoStartup="false">
         <!--properties>
