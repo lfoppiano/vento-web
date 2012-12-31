@@ -29,8 +29,8 @@ public class SentiBatchEvaluationProcessor implements Processor {
         tempScore.put("value", result)
         tempScore.put("timestamp", exchange.getIn().getHeader("timestamp"))
 
-        def tmpHistoryList = (List) element.get("score-history")
-        element.put("score-history", tmpHistoryList.add(tempScore)) //a failsafe
+        def tmpHistoryList = (List) element.get("scoreHistories")
+        element.put("scoreHistories", tmpHistoryList.add(tempScore)) //a failsafe
 
         exchange.getIn().setBody(element);
     }
