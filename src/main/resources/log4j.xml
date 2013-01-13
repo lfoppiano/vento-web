@@ -2,10 +2,7 @@
 <!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
 <log4j:configuration xmlns:log4j='http://jakarta.apache.org/log4j/'>
 
-    <root>
-        <level value="INFO"/>
-        <appender-ref ref="consoleAppender"/>
-    </root>
+    <throwableRenderer class="org.apache.log4j.EnhancedThrowableRenderer"/>
 
     <appender name="consoleAppender" class="org.apache.log4j.ConsoleAppender">
         <layout class="org.apache.log4j.PatternLayout">
@@ -13,8 +10,6 @@
             <!--param name="ConversionPattern" value="[%30.30t] %-30.30c{1} %-5p %m%n"/-->
         </layout>
     </appender>
-
-    <throwableRenderer class="org.apache.log4j.EnhancedThrowableRenderer"/>
 
     <logger name="org.springframework">
         <level value="WARN"/>
@@ -27,5 +22,10 @@
     <logger name="org.vento">
         <level value="DEBUG"/>
     </logger>
+
+    <root>
+        <level value="INFO"/>
+        <appender-ref ref="consoleAppender"/>
+    </root>
 
 </log4j:configuration>
