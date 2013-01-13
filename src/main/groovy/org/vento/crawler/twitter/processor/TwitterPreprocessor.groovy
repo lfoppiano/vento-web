@@ -58,12 +58,14 @@ public class TwitterPreprocessor implements Processor {
      * @return a twit with the text cleaned and the referenceScore set
      */
     private analyzeAndCleanEmotions(Twit body){
-        String positiveRegex =  /([;:8]?[-=]?)[P)}DFf]/
-        String negativeRegex =  /[;:8]?[-=]?[(P){]/
+        //String positiveRegex =  /(([;:8][-=]))[P)}DFf]/
+        String positiveRegex =  /([;:8]|[-=]|[;:8][-=])[P)}DFf]/
+        String negativeRegex =  /([;:8]|[-=]|[;:8][-=])[({]/
 
         def text = body?.text
         def referenceScore = body.referenceScore
         text = text.replaceAll(positiveRegex) {
+            //println it
             if(!referenceScore)
                 referenceScore = '3.0'
 
@@ -71,6 +73,7 @@ public class TwitterPreprocessor implements Processor {
         }
 
         text = text.replaceAll(negativeRegex) {
+            //println it
             if(!referenceScore)
                 referenceScore = '1.0'
             else if(referenceScore == '3.0')
