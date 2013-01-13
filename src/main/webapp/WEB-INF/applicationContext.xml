@@ -67,10 +67,10 @@
 
 
     <!-- gate experiment -->
-    <gate:init gate-home="file:/gateWorkspace/GATE_Developer_7.1" />
+    <gate:init gate-home="file:${gate.home}" />
 
     <gate:duplicate id="classificationApp">
-        <gate:saved-application location="file:/gateWorkspace/gate-project-classification/batch-learning.classification.configuration.xml" />
+        <gate:saved-application location="file:${gate.classification}" />
     </gate:duplicate>
 
     <bean id="experimentalClassifier"
