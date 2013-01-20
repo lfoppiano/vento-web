@@ -3,10 +3,10 @@ package org.vento.crawler.twitter.processor
 import groovy.json.JsonSlurper
 import org.apache.camel.Exchange
 import org.apache.camel.Processor
-import org.vento.model.ScoreHistory
 import org.vento.model.Twit
 import org.vento.model.Twits
-import org.vento.crawler.amazon.utility.StringProcessor
+import org.vento.utility.StringProcessor
+import org.vento.utility.TwitHelper
 import org.vento.utility.VentoTypes
 
 public class TwitterPreprocessor implements Processor {
@@ -37,81 +37,13 @@ public class TwitterPreprocessor implements Processor {
             twit.getScoreHistories()
 
             //cleaning up and enriching
-            twit = analyzeAndCleanEmotions(twit)
-            twit.text = textProcessing(twit.text)
+            twit = TwitHelper.analyzeAndCleanEmotions(twit)
+            twit.text = StringProcessor.textProcessing(twit.text)
             root.twits.add(twit)
         }
 
 
         exchange.getOut().setBody(root)
-    }
-
-    /**
-     * Analyze and remove emoticons.
-     *  - analyze the positive emoticons, and set referenceScore = 3.0 if any is found
-     *  - analyze the negative emoticons,
-     *      * if no referenceScore has been set, it set one
-     *      * if a positive reference score has been set, it set to 0.0 the result which
-     *          invalidate the calculation, because there is no clear state of emotion
-     *
-     * @param body a twit with at least text != null
-     * @return a twit with the text cleaned and the referenceScore set
-     */
-    private analyzeAndCleanEmotions(Twit body){
-        //String positiveRegex =  /(([;:8][-=]))[P)}DFf]/
-        String positiveRegex =  /([;:8]|[-=]|[;:8][-=])[P)}DFf]/
-        String negativeRegex =  /([;:8]|[-=]|[;:8][-=])[({]/
-
-        def text = body?.text
-        def referenceScore = body.referenceScore
-        text = text.replaceAll(positiveRegex) {
-            //println it
-            if(!referenceScore)
-                referenceScore = '3.0'
-
-            return ''
-        }
-
-        text = text.replaceAll(negativeRegex) {
-            //println it
-            if(!referenceScore)
-                referenceScore = '1.0'
-            else if(referenceScore == '3.0')
-                referenceScore = '0.0'
-
-            return ''
-        }
-
-        body.text = text.trim()
-        body.referenceScore = referenceScore == '0.0' ? null : referenceScore
-        return body;
-    }
-
-    private String textProcessing(String text) {
-        //Remove recipients
-        text = text.replaceAll(/@\w+(:)?/, '')
-
-        //Remove hash of tags
-        text = text.replaceAll(/#/, '')
-
-        //Remove emoticons neutral
-        //text = text.replaceAll(/[;:8](-)?[(P)}{D]/, '')
-
-        //Double space to space
-        text = text.replaceAll(/\s\s/, ' ')
-
-        //Remove links/urls
-        text = text.replaceAll(/(via)? http:\/\/[a-zA-Z0-9\/-=.:]+/, '')
-
-        //Remove retweets
-        text = text.replaceAll(/^?RT\s?:/, '')
-
-        //Remove invalid characters
-        text = StringProcessor.removeInvalidUtf8Chars(text)
-
-        text = text.trim()
-
-        return text
     }
 
 }

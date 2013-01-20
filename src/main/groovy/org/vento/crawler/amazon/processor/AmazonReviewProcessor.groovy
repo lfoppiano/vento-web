@@ -4,7 +4,7 @@ import org.apache.camel.Exchange
 import org.apache.camel.Processor
 import org.vento.model.Twit
 import org.vento.model.Twits
-import org.vento.crawler.amazon.utility.StringProcessor
+import org.vento.utility.StringProcessor
 
 /**
  * Created by IntelliJ IDEA.
