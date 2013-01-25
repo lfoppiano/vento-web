@@ -83,7 +83,12 @@
             <version>${camel.version}</version>
         </dependency>
 
-        <!-- endpoints -->
+        <!-- endpoints components  -->
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-twitter</artifactId>
+            <version>2.11-SNAPSHOT</version>
+        </dependency>
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-http</artifactId>
@@ -92,6 +97,11 @@
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-mongodb</artifactId>
+            <version>${camel.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-jetty</artifactId>
             <version>${camel.version}</version>
         </dependency>
 
@@ -151,6 +161,12 @@
             <version>7.1</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.twitter4j</groupId>
+            <artifactId>twitter4j-core</artifactId>
+            <version>3.0.3</version>
+
+        </dependency>
     </dependencies>
 
     <build>

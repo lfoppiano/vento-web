@@ -23,6 +23,10 @@
         <property name="corpusName" value="classificationTestCorpus" />
     </bean>
 
+    <bean id="twitterLiveClassificationProcessor" class="org.vento.crawler.twitter.processor.TwitterLiveClassificationProcessor">
+        <property name="classifier" ref="classificationApp" />
+    </bean>
+
     <!--bean id="gateEngineTesting" class="org.vento.semantic.sentiment.SentiBatchProcessingImpl">
         <constructor-arg name="gateHome" value="${gate.home}" />
         <constructor-arg name="projectConfigFile"  value="${gate.training}" />
@@ -30,7 +34,7 @@
         <constructor-arg name="corpusName" value="trainingCorpus" />
     </bean-->
 
-    <bean id="gateEvaluationClassifier" class="org.vento.sentiment.gate.SentiBatchClassificationImpl">
+    <bean id="gateEvaluationClassifier" class="org.vento.sentiment.gate.SentiBatchClassificationImpl" lazy-init="true">
         <property name="gateHome" value="${gate.home}" />
         <property name="gateConfigFile"  value="${gate.evaluation}" />
         <property name="corpusName" value="evaluationTestCorpus" />
@@ -44,7 +48,7 @@
         <property name="classifier" ref="gateEvaluationClassifier" />
     </bean>
 
-    <bean id="gateTrainingProcessor" class="org.vento.sentiment.training.processor.SentiBatchTrainingProcessor">
+    <bean id="gateTrainingProcessor" class="org.vento.sentiment.training.processor.SentiBatchTrainingProcessor" lazy-init="true">
         <property name="gateHome" value="${gate.home}" />
         <property name="projectConfigFile"  value="${gate.training}" />
         <property name="dataStoreDir" value="${gate.training.datastore}" />
