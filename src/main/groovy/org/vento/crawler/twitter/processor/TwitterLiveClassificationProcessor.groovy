@@ -48,7 +48,8 @@ public class TwitterLiveClassificationProcessor implements Processor {
             def twit = [
                     tweet.getTwitterId(),
                     tweet.getText(),
-                    tweet.getScore()
+                    tweet.getScore(),
+                    tweet.getReferenceScore()
             ]
             twits << twit
         }
