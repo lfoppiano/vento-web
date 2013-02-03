@@ -45,14 +45,14 @@ public class TwitterCrawlerExperimentRoute extends RouteBuilder {
                 .redeliveryDelay(5000);
 
         from(sourceFileQuery)
-                .routeId("Twitter url builder")
+                .routeId("Twitter url builder experimental")
                 .split().tokenize("\n")
         //        .loop(15).copy()
         //        .transform(body().append(simple("&page=${header.CamelLoopIndex}++")))
                 .to("seda:queryQueue");
 
         from("seda:queryQueue?concurrentConsumers=1")
-                .routeId("Twitter crawler")
+                .routeId("Twitter crawler experimental")
                         //.to("log:httpQuery?level=INFO&showHeaders=true")
                 //.setHeader(Exchange.HTTP_METHOD, constant("GET"))
                 //.setHeader(Exchange.HTTP_QUERY, simple("q=${body}&lang=en&rpp=100"))
@@ -60,8 +60,8 @@ public class TwitterCrawlerExperimentRoute extends RouteBuilder {
                 .setHeader(TwitterConstants.TWITTER_KEYWORDS, body())
                 .setHeader("query", body())
 
-            /*.to("twitter://search?type=direct&" + */
-                .to("twitter://streaming/filter?" +
+            .to("twitter://search?type=direct&" +
+            /*    .to("twitter://streaming/filter?" + */
                     //"lang=en&" +
 //                    "delay=30&" +
                     //"numberOfPages=2&"+
