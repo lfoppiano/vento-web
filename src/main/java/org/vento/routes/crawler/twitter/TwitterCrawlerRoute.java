@@ -2,11 +2,9 @@ package org.vento.routes.crawler.twitter;
 
 import org.apache.camel.*;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.component.twitter.TwitterConstants;
 import org.apache.camel.processor.idempotent.MemoryIdempotentRepository;
 import org.vento.model.Twit;
 import org.vento.model.Twits;
-import twitter4j.Status;
 
 import java.util.UUID;
 
@@ -50,38 +48,19 @@ public class TwitterCrawlerRoute extends RouteBuilder {
         from(sourceFileQuery)
                 .routeId("Twitter url builder")
                 .split().tokenize("\n")
-        //        .loop(15).copy()
-        //        .transform(body().append(simple("&page=${header.CamelLoopIndex}++")))
+                .loop(15).copy()
+                .transform(body().append(simple("&page=${header.CamelLoopIndex}++")))
                 .to("seda:queryQueue");
 
         from("seda:queryQueue?concurrentConsumers=1")
                 .routeId("Twitter crawler")
                         //.to("log:httpQuery?level=INFO&showHeaders=true")
-                //.setHeader(Exchange.HTTP_METHOD, constant("GET"))
-                //.setHeader(Exchange.HTTP_QUERY, simple("q=${body}&lang=en&rpp=100"))
-                //.to("http://search.twitter.com/search.json?httpClient.cookiePolicy=ignoreCookies")
-                .setHeader(TwitterConstants.TWITTER_KEYWORDS, body())
-                .setHeader("query", body())
-
-            .to("twitter://search?type=direct&" +
-                    "lang=en&" +
-                    "delay=30&" +
-                    "numberOfPages=10&"+
-                    "count=100&" +
-                    "filterOld=true&" +
-                    "consumerKey=bjGMxAJIv2uc10ESDUx6w&" +
-                    "consumerSecret=5bmm77bQnD4YbRXUnYv36AteUAcK1Cy6MqMGCpqXY&" +
-                    "accessToken=1087160808-gqOvlbHzAIDx8vGwdipaFuhUDlGhXWNwuYVjYt9&" +
-                    "accessTokenSecret=sgjtvpe7akX1GsRSsK9RR4VvLSO2UUAGrMwtMgRN0")
-
-                //.convertBodyTo(String.class, "UTF-8")
-                //.convertBodyTo(Status.class)
-                .processRef("twitter4jPreprocessor")
-                .split().xpath("//twits/twit").streaming()
-                .convertBodyTo(Twit.class)
-                .to(dataStorage);
-                //.to("mock:output");
-                /*.processRef("twitterPreprocessor")
+                .setHeader(Exchange.HTTP_METHOD, constant("GET"))
+                .setHeader(Exchange.HTTP_QUERY, simple("q=${body}&lang=en&rpp=100"))
+                .to("http://search.twitter.com/search.json?httpClient.cookiePolicy=ignoreCookies")
+                .convertBodyTo(String.class, "UTF-8")
+                //.to("mock:output")
+                .processRef("twitterPreprocessor")
                 .convertBodyTo(Twits.class)
                 .split().xpath("//twits/twit").streaming()
                 .convertBodyTo(Twit.class)
@@ -95,7 +74,7 @@ public class TwitterCrawlerRoute extends RouteBuilder {
                 .idempotentConsumer(header("twitterId"), MemoryIdempotentRepository.memoryIdempotentRepository(1000000))
                         //.idempotentConsumer(header("twitterId"), FileIdempotentRepository.fileIdempotentRepository(new File("file:///tmp/twitter/idempotent")))
                 .setHeader("CamelFileName").simple(UUID.randomUUID().toString())
-                .to(dataStorage);*/
+                .to(dataStorage);
 
     }
 
