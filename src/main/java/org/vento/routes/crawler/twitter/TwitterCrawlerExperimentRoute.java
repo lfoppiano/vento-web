@@ -62,11 +62,11 @@ public class TwitterCrawlerExperimentRoute extends RouteBuilder {
 
             .to("twitter://search?type=direct&" +
             /*    .to("twitter://streaming/filter?" + */
-                    //"lang=en&" +
-//                    "delay=30&" +
-                    //"numberOfPages=2&"+
-                    //"count=100&" +
-                    //"filterOld=true&" +
+                    "lang=en&" +
+                    "delay=30&" +
+                    "numberOfPages=2&"+
+                    "count=100&" +
+                    "filterOld=true&" +
                     "consumerKey=bjGMxAJIv2uc10ESDUx6w&" +
                     "consumerSecret=5bmm77bQnD4YbRXUnYv36AteUAcK1Cy6MqMGCpqXY&" +
                     "accessToken=1087160808-gqOvlbHzAIDx8vGwdipaFuhUDlGhXWNwuYVjYt9&" +

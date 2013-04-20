@@ -78,10 +78,15 @@
         <gate:saved-application location="file:${gate.classification}" />
     </gate:duplicate>
 
+    <bean id="gateProcessor" class="gate.util.LanguageAnalyserDocumentProcessor">
+        <property name="analyser" ref="classificationApp" />
+        <gate:pooled-proxy max-size="5" />
+    </bean>
+
     <bean id="experimentalClassifier"
           class="org.vento.sentiment.classification.SentiBatchExperimentalClassificationProcessor">
-        <property name="classifier" ref="classificationApp" />
-        <gate:pooled-proxy max-size="5" />
+
+        <property name="classifier" ref="gateProcessor"/>
     </bean>
 
     <!-- gate experiment -->
@@ -111,7 +116,7 @@
         <endpoint id="rejectReviewsLocation" uri="file:${reject.dir}?fileName=amazonReview-reject-$simple{date:now:yyMMddHHmmssSSSS}.xml" />
 
         <!-- Classification route -->
-        <endpoint id="mongoQueryClassification" uri="file:src/data/in?fileName=mongoQueryClassification.txt&amp;noop=true&amp;idempotent=false&amp;delay=30000" />
+        <endpoint id="mongoQueryClassification" uri="file:src/data/in?fileName=mongoQueryClassification.txt&amp;noop=true&amp;idempotent=false&amp;delay=90000" />
 
         <!-- Training route -->
         <endpoint id="mongoQueryTraining" uri="file:src/data/in?fileName=mongoQueryTraining.txt&amp;noop=true&amp;idempotent=false&amp;delay=600000" />

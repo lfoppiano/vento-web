@@ -56,7 +56,7 @@ public class TwitterCrawlerRoute extends RouteBuilder {
                 .routeId("Twitter crawler")
                         //.to("log:httpQuery?level=INFO&showHeaders=true")
                 .setHeader(Exchange.HTTP_METHOD, constant("GET"))
-                .setHeader(Exchange.HTTP_QUERY, simple("q=${body}&lang=en&rpp=100"))
+                .setHeader(Exchange.HTTP_QUERY, simple("q=${body}%20-rt&%20-filter:links&lang=en&rpp=100"))
                 .to("http://search.twitter.com/search.json?httpClient.cookiePolicy=ignoreCookies")
                 .convertBodyTo(String.class, "UTF-8")
                 //.to("mock:output")
