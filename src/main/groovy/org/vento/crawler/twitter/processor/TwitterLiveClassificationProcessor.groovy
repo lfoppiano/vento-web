@@ -73,29 +73,4 @@ public class TwitterLiveClassificationProcessor implements Processor {
         this.classificationWrapper = classificationWrapper
     }
 
-/*public void setClassifier(ConditionalSerialAnalyserController classifier) {
-    this.classifier = classifier;
-}
-
-
-private float classify(String text) {
-    float result = 0.0
-    Corpus tmpCorpus = gate.Factory.newCorpus(Gate.genSym())
-    tmpCorpus.add(gate.Factory.newDocument("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<twit>\n<text>" + text + "</text>\n</twit>"))
-    classifier.setCorpus(tmpCorpus)
-
-    classifier.execute()
-    Iterator<Annotation> classificationScoreStr = ((Document)tmpCorpus.iterator().next()).getAnnotations("Output").get("Review").iterator()
-    if (classificationScoreStr.hasNext()){
-
-        result = Float.parseFloat((String)classificationScoreStr.next().getFeatures().get("score"))
-    }
-
-    tmpCorpus.clear();
-    tmpCorpus.cleanup();
-    gate.Factory.deleteResource(tmpCorpus);
-
-    return result;
-}        */
-
 }

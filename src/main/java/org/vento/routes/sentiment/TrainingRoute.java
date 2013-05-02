@@ -8,7 +8,6 @@ import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mongodb.MongoDbConstants;
 import org.vento.sentiment.training.TrainingQueueAggregationStrategy;
-import org.vento.sentiment.training.processor.SentiBatchTrainingProcessor;
 import org.vento.utility.VentoTypes;
 
 
@@ -21,25 +20,19 @@ import org.vento.utility.VentoTypes;
  */
 public class TrainingRoute extends RouteBuilder {
 
+    private final int QUERY_FETCH_LIMIT = 3;
     @EndpointInject(ref = "rejectLocation")
     private Endpoint rejectEndpoint;
-
     @EndpointInject(ref = "trainingTemp")
     private Endpoint trainingTemp;
-
     @EndpointInject(ref = "mongoQueryTraining")
     private Endpoint mongoQueryTraining;
-
     @EndpointInject(ref = "mongoStorageFindAll")
     private Endpoint mongoConnector;
-
     @EndpointInject(ref = "mongoStorageSave")
     private Endpoint storageTypeUpdate;
-
-    private final int QUERY_FETCH_LIMIT = 3;
     //TODO: make it configurable
     private int trainingBatchLimit = QUERY_FETCH_LIMIT;
-
 
     @Override
     public void configure() throws Exception {
