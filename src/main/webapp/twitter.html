@@ -81,28 +81,41 @@
         $("#searchInput").keypress(function (event) {
             if (event.which == 13) {
                 value = $("#searchInput").prop('value');
-                $.get('http://localhost:8888/classification?lang=en&search=' + value, function (data) {
-                    var obj = JSON.parse(data)
 
-                    oTable.fnClearTable();
-                    oTable.fnAddData(obj.aaData);
+                $.ajax('http://localhost:8888/classification?lang=en&search=' + value)
+                        .done(function (data) {
+                            alert("success");
+                            var obj = JSON.parse(data)
 
-                });
+                            oTable.fnClearTable();
+                            oTable.fnAddData(obj.aaData);
+                        })
+                        .fail(function () {
+                            alert("error");
+                        })
+                ;
+                /*$.get('http://localhost:8888/classification?lang=en&search=' + value, function (data) {
+                 var obj = JSON.parse(data)
+
+                 oTable.fnClearTable();
+                 oTable.fnAddData(obj.aaData);
+
+                 }); */
             }
 
         });
         $("#searchInput").focus()
 
         /*$("#searchButton").bind("click", function () {
-            value = $("#searchInput").prop('value');
-            $.get('http://localhost:8888/classification?lang=en&search=' + value, function (data) {
-                var obj = JSON.parse(data)
+         value = $("#searchInput").prop('value');
+         $.get('http://localhost:8888/classification?lang=en&search=' + value, function (data) {
+         var obj = JSON.parse(data)
 
-                oTable.fnClearTable();
-                oTable.fnAddData(obj.aaData);
+         oTable.fnClearTable();
+         oTable.fnAddData(obj.aaData);
 
-            });
-        });*/
+         });
+         });*/
 
 
     });

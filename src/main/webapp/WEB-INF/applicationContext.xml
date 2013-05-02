@@ -36,6 +36,9 @@
         <!--endpoint id="outputDirectory" uri="${output.dir}" /-->
         <endpoint id="outputQueue" uri="${outputQueue.uri}" />
 
+        <!-- Twitter CSV importer -->
+        <endpoint id="sourceFileImporter" uri="file:${input.dir}/import?noop=true&amp;idempotent=true&amp;delay=10000"/>
+
         <!-- Amazon Reviews -->
         <endpoint id="sourceFileReviews" uri="file:${inputReviews.dir}?fileName=sourceFileReviews.txt&amp;noop=true" />
         <endpoint id="outputReviewsDirectory" uri="file:${outputReviews.dir}?fileName=amazonReview-output-$simple{date:now:yyMMddHHmmssSSSS}.xml" />
