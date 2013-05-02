@@ -1,4 +1,4 @@
-package org.vento.sentiment.classification
+package org.vento.sentiment.classification.processor
 
 import com.mongodb.DBObject;
 import org.apache.camel.Exchange;

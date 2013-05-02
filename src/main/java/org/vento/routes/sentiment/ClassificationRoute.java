@@ -1,9 +1,9 @@
 package org.vento.routes.sentiment;
 
-import gate.creole.ExecutionException;
 import org.apache.camel.Endpoint;
 import org.apache.camel.EndpointInject;
-import org.apache.camel.LoggingLevel;
+import org.apache.camel.Exchange;
+import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mongodb.MongoDbConstants;
 
@@ -16,16 +16,13 @@ import org.apache.camel.component.mongodb.MongoDbConstants;
  */
 public class ClassificationRoute extends RouteBuilder {
 
-    private final int BATHC_FETCH_LIMIT = 500;
+    private final int BATHC_FETCH_LIMIT = 1000;
     @EndpointInject(ref = "rejectLocation")
     private Endpoint rejectEndpoint;
-
     @EndpointInject(ref = "mongoQueryClassification")
     private Endpoint mongoQueryClassification;
-
     @EndpointInject(ref = "mongoStorageFindAll")
     private Endpoint mongoFindAllClassification;
-
     @EndpointInject(ref = "mongoStorageSave")
     private Endpoint mongoUpdateClassification;
 
@@ -38,6 +35,20 @@ public class ClassificationRoute extends RouteBuilder {
         );*/
 
         from(mongoQueryClassification)
+                .routeId("Classification sentiment extraction")
+                .convertBodyTo(String.class)
+                .setHeader(MongoDbConstants.LIMIT, constant(BATHC_FETCH_LIMIT))
+                .to(mongoFindAllClassification)
+                .split(body())
+                .to("seda:tmpClassify");
+
+        from("seda:tmpClassify?concurrentConsumers=5")
+                .routeId("Classification sentiment classify")
+                .processRef("experimentalClassifier")
+                .log("${body.get(\"twitterId\")} - ${body.get(\"text\")} - ${body.get(\"score\")}")
+                .to(mongoUpdateClassification);
+
+        /*from(mongoQueryClassification)
                 .routeId("Sentiment classification")
                 .convertBodyTo(String.class)
                 .setHeader(MongoDbConstants.LIMIT, constant(BATHC_FETCH_LIMIT))
@@ -46,5 +57,6 @@ public class ClassificationRoute extends RouteBuilder {
                 .processRef("gateClassifierProcessor")
                 .log("${body.get(\"twitterId\")} - ${body.get(\"text\")} - ${body.get(\"score\")}")
                 .to(mongoUpdateClassification);
+                */
     }
 }

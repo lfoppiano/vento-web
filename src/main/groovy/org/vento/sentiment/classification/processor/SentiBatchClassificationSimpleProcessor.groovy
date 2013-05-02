@@ -1,4 +1,4 @@
-package org.vento.sentiment.classification
+package org.vento.sentiment.classification.processor
 
 import org.apache.camel.Processor
 import org.apache.camel.Exchange

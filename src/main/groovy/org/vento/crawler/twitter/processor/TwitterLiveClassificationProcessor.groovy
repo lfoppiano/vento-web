@@ -10,6 +10,7 @@ import org.apache.camel.Processor
 import org.vento.model.Twit
 import org.vento.model.Twits
 import org.vento.sentiment.SimpleBatchClassification
+import org.vento.sentiment.classification.ClassificationWrapper
 import org.vento.utility.StringProcessor
 import org.vento.utility.TwitHelper
 import twitter4j.Status
@@ -23,8 +24,10 @@ import twitter4j.Status
  */
 public class TwitterLiveClassificationProcessor implements Processor {
 
-    //private SimpleBatchClassification classifier;
-    private ConditionalSerialAnalyserController classifier;
+
+    //private ConditionalSerialAnalyserController classifier;
+
+    private ClassificationWrapper classificationWrapper;
 
     @Override
     public void process(Exchange exchange) throws Exception {
@@ -39,7 +42,7 @@ public class TwitterLiveClassificationProcessor implements Processor {
             t.setText(tweet.getText());
             t = TwitHelper.analyzeAndCleanEmotions(t);
             t.setText(StringProcessor.textProcessing(tweet.getText()));
-            t.setScore("" + classify(t.getText()));
+            t.setScore("" + classificationWrapper.classify(t.getText()));
             ts.getTwits().add(t);
         }
 
@@ -66,28 +69,33 @@ public class TwitterLiveClassificationProcessor implements Processor {
         exchange.getOut().setHeader("Access-Control-Allow-Origin", "*")
     }
 
-    public void setClassifier(ConditionalSerialAnalyserController classifier) {
-        this.classifier = classifier;
+    void setClassificationWrapper(ClassificationWrapper classificationWrapper) {
+        this.classificationWrapper = classificationWrapper
     }
 
-    private float classify(String text) {
-        float result = 0.0
-        Corpus tmpCorpus = gate.Factory.newCorpus(Gate.genSym())
-        tmpCorpus.add(gate.Factory.newDocument("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<twit>\n<text>" + text + "</text>\n</twit>"))
-        classifier.setCorpus(tmpCorpus)
+/*public void setClassifier(ConditionalSerialAnalyserController classifier) {
+    this.classifier = classifier;
+}
 
-        classifier.execute()
-        Iterator<Annotation> classificationScoreStr = ((Document)tmpCorpus.iterator().next()).getAnnotations("Output").get("Review").iterator()
-        if (classificationScoreStr.hasNext()){
 
-            result = Float.parseFloat((String)classificationScoreStr.next().getFeatures().get("score"))
-        }
+private float classify(String text) {
+    float result = 0.0
+    Corpus tmpCorpus = gate.Factory.newCorpus(Gate.genSym())
+    tmpCorpus.add(gate.Factory.newDocument("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<twit>\n<text>" + text + "</text>\n</twit>"))
+    classifier.setCorpus(tmpCorpus)
 
-        tmpCorpus.clear();
-        tmpCorpus.cleanup();
-        gate.Factory.deleteResource(tmpCorpus);
+    classifier.execute()
+    Iterator<Annotation> classificationScoreStr = ((Document)tmpCorpus.iterator().next()).getAnnotations("Output").get("Review").iterator()
+    if (classificationScoreStr.hasNext()){
 
-        return result;
+        result = Float.parseFloat((String)classificationScoreStr.next().getFeatures().get("score"))
     }
+
+    tmpCorpus.clear();
+    tmpCorpus.cleanup();
+    gate.Factory.deleteResource(tmpCorpus);
+
+    return result;
+}        */
 
 }
