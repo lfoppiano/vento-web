@@ -26,6 +26,14 @@ public class LiveClassificationRoute extends RouteBuilder {
         from("jetty:http://0.0.0.0:8889/classification")
                 .routeId("Live classification route")
                 .autoStartup(true)
+                /*.process(new Processor() {
+                    @Override
+                    public void process(Exchange exchange) throws Exception {
+                        // just get the body as a string
+                        String provider = (String) exchange.getIn().getHeader("provider");
+                        String searchTerm = (String) exchange.getIn().getHeader("search");
+                    }
+                })*/
                 .setHeader(TwitterConstants.TWITTER_SEARCH_LANGUAGE, header("lang"))
                 .setHeader(TwitterConstants.TWITTER_KEYWORDS, header("search"))
                 .setHeader(TwitterConstants.TWITTER_COUNT, constant(10))
