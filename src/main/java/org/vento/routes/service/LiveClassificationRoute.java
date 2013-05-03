@@ -36,7 +36,7 @@ public class LiveClassificationRoute extends RouteBuilder {
                 })*/
                 .setHeader(TwitterConstants.TWITTER_SEARCH_LANGUAGE, header("lang"))
                 .setHeader(TwitterConstants.TWITTER_KEYWORDS, header("search"))
-                .setHeader(TwitterConstants.TWITTER_COUNT, constant(10))
+                .setHeader(TwitterConstants.TWITTER_COUNT, constant(20))
                 .setHeader(TwitterConstants.TWITTER_NUMBER_OF_PAGES, constant(1))
                 .to("twitter://search?" +
                         "filterOld=false&" +
