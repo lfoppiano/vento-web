@@ -49,21 +49,21 @@ public class TwitterLiveClassificationProcessor implements Processor {
         def twits = []
         for (Twit tweet : ts.twits) {
             def twit = [
-                    tweet.getTwitterId(),
-                    tweet.getText(),
-                    tweet.getScore(),
-                    tweet.getReferenceScore()
+                    twitterId: tweet.getTwitterId(),
+                    text: tweet.getText(),
+                    score: tweet.getScore(),
+                    referenceScore: tweet.getReferenceScore()
             ]
             twits << twit
         }
 
-        def dataToRender = [:]
+        /*def dataToRender = [:]
         dataToRender['aaData'] = twits
         dataToRender['iTotalDisplayRecords'] = ts.twits.size()
-        dataToRender['iTotalRecords'] = ts.twits.size()
+        dataToRender['iTotalRecords'] = ts.twits.size()*/
 
 
-        def jsonBuilder = new groovy.json.JsonBuilder(dataToRender);
+        def jsonBuilder = new groovy.json.JsonBuilder(twits);
 
         exchange.getOut().setBody(jsonBuilder.toString());
         exchange.getOut().setHeader("Access-Control-Allow-Origin", "*")
