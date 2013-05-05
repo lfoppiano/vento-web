@@ -4,7 +4,9 @@ import gate.Annotation;
 import gate.Document;
 import gate.Factory;
 import gate.util.DocumentProcessor;
-import gate.util.GateException;
+import gate.util.GateException
+import org.apache.commons.lang.StringEscapeUtils
+import org.apache.commons.lang.StringUtils;
 
 import java.util.Iterator;
 
@@ -22,6 +24,8 @@ public class ClassificationWrapper {
     public String classify(String text) {
 
         Document tmpDocument = null;
+
+        text = StringEscapeUtils.escapeXml(text)
         float result = 0.0f;
         try {
             tmpDocument = Factory.newDocument(("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<twit>\n<text>" + text + "</text>\n</twit>"));
