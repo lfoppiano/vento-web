@@ -70,10 +70,10 @@
     </bean-->
 
     <!-- gate experiment -->
-    <gate:init gate-home="file:${gate.home}"/>
+    <gate:init gate-home="${gate.home}" user-config-file="${gate.userFile}"/>
 
     <gate:duplicate id="classificationApp">
-        <gate:saved-application location="file:${gate.classification}"/>
+        <gate:saved-application location="${gate.classification}"/>
     </gate:duplicate>
 
     <bean id="gateProcessor" class="gate.util.LanguageAnalyserDocumentProcessor">
