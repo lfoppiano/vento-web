@@ -65,6 +65,16 @@
         <property name="positiveWordFile" value="/opt/local/gate/positive_adj_list.txt"/>
     </bean-->
 
+
+    <!-- traning experiment -->
+
+    <gate:saved-application location="${gate.training}" id="trainingApp"/>
+    <bean id="trainingWrapper" class="org.vento.sentiment.training.processor.SentiBatchTrainingProcessor">
+        <property name="trainer" ref="trainingApp"/>
+        <property name="corpusDirectory" value="${gate.training.corpusDirectory}"/>
+    </bean>
+
+    <!-- gate experiment -->
     <gate:init gate-home="${gate.home}" user-config-file="${gate.userFile}"/>
 
     <gate:duplicate id="classificationApp">

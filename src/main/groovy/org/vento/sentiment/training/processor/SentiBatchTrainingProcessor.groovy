@@ -1,10 +1,11 @@
 package org.vento.sentiment.training.processor
 
+import gate.Corpus
+import gate.CorpusController
+import gate.util.ExtensionFileFilter
 import org.apache.camel.Exchange
 import org.apache.camel.Processor
 import org.apache.commons.io.FileUtils
-import org.vento.sentiment.gate.GateBatchProcessing
-import org.vento.sentiment.gate.SentiBatchProcessingImpl
 
 /**
  * Created with IntelliJ IDEA.
@@ -14,6 +15,25 @@ import org.vento.sentiment.gate.SentiBatchProcessingImpl
  * To change this template use File | Settings | File Templates.
  */
 class SentiBatchTrainingProcessor implements Processor{
+
+    private CorpusController trainer
+    private File corpusDirectory
+
+    @Override
+    public void process(Exchange exchange){
+
+        Corpus tmpCorpus = gate.Factory.newCorpus()
+        tmpCorpus.populate(corpusDirectory, new ExtensionFileFilter("XML files", "xml"), "UTF-8", true)
+        trainer.setCorpus(tmpCorpus)
+        trainer.execute()
+    }
+
+
+    public void setTrainer(CorpusController trainer) {
+        this.trainer = trainer;
+    }
+
+    /*
     private GateBatchProcessing engine;
 
     private File gateHome;
@@ -62,5 +82,6 @@ class SentiBatchTrainingProcessor implements Processor{
     void setCorpusDirectory(URL corpusDirectory) {
         this.corpusDirectory = corpusDirectory
     }
+    */
 }
 
