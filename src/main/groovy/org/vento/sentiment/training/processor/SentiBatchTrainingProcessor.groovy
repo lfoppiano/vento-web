@@ -33,6 +33,10 @@ class SentiBatchTrainingProcessor implements Processor{
         this.trainer = trainer;
     }
 
+    void setCorpusDirectory(File corpusDirectory) {
+        this.corpusDirectory = corpusDirectory
+    }
+
     /*
     private GateBatchProcessing engine;
 
