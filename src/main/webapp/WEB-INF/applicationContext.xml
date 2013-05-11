@@ -12,7 +12,7 @@
                   http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
                   http://gate.ac.uk/ns/spring http://gate.ac.uk/ns/spring.xsd">
 
-    <context:property-placeholder location="classpath:twitterCrawler.properties"/>
+    <context:property-placeholder location="classpath:vento-web.properties"/>
 
     <import resource="vento-beans.xml" />
     <import resource="vento-persistence.xml" />
@@ -54,10 +54,11 @@
         <!-- Testing route -->
         <endpoint id="mongoQueryTesting" uri="file:src/data/in?fileName=mongoQueryTesting.txt&amp;noop=true&amp;idempotent=false&amp;delay=600000" />
 
-        <!-- MONGODB Generic endpoint -->
+        <!-- MONGODB Generic endpoints -->
         <endpoint id="mongoStorageFindAll" uri="mongodb:mongoDb?database=vento&amp;collection=reports&amp;operation=findAll" />
         <endpoint id="mongoStorageSave" uri="mongodb:mongoDb?database=vento&amp;collection=reports&amp;operation=save" />
 
+        <!-- MONGODB Specific endpoints -->
         <endpoint id="mongoSearchHistorySave" uri="mongodb:mongoDb?database=vento&amp;collection=searches&amp;operation=save" />
 
     </camelContext>

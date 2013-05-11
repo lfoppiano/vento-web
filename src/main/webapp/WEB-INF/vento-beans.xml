@@ -19,14 +19,7 @@
     <!-- Live classification -->
     <bean id="twitterLiveClassificationProcessor"
           class="org.vento.crawler.twitter.processor.TwitterLiveClassificationProcessor">
-        <!--property name="classifier" ref="classificationApp"/-->
         <property name="classificationWrapper" ref="classificationWrapper" />
-    </bean>
-
-    <bean id="gateClassifier" class="org.vento.sentiment.gate.SentiBatchClassificationImpl">
-        <property name="gateHome" value="${gate.home}"/>
-        <property name="gateConfigFile" value="${gate.classification}"/>
-        <property name="corpusName" value="classificationTestCorpus"/>
     </bean>
 
 
@@ -43,10 +36,6 @@
         <property name="corpusName" value="evaluationTestCorpus"/>
     </bean>
 
-    <!--bean id="gateClassifierProcessor" class="org.vento.sentiment.classification.processor.SentiBatchClassificationProcessor">
-        <property name="classifier" ref="gateClassifier"/>
-    </bean-->
-
     <bean id="gateEvaluationProcessor" class="org.vento.sentiment.evaluation.SentiBatchEvaluationProcessor">
         <property name="classifier" ref="gateEvaluationClassifier"/>
     </bean>
@@ -60,10 +49,8 @@
         <property name="corpusDirectory" value="${gate.training.corpusDirectory}"/>
     </bean>
 
-    <!--bean id="simpleClassifier" class="org.vento.sentiment.statistical.SentiBatchClassificationSimpleImpl">
-        <property name="negativeWordFile" value="/opt/local/gate/negative_adj_list.txt"/>
-        <property name="positiveWordFile" value="/opt/local/gate/positive_adj_list.txt"/>
-    </bean-->
+
+    <!-- GATE spring setup -->
 
 
     <!-- traning experiment -->
@@ -95,7 +82,4 @@
 
         <property name="classificationWrapper" ref="classificationWrapper"/>
     </bean>
-
-    <!-- gate experiment -->
-
 </beans>
