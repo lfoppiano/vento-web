@@ -60,16 +60,11 @@
         <property name="corpusDirectory" value="${gate.training.corpusDirectory}"/>
     </bean>
 
-    <bean id="simpleClassifier" class="org.vento.sentiment.statistical.SentiBatchClassificationSimpleImpl">
+    <!--bean id="simpleClassifier" class="org.vento.sentiment.statistical.SentiBatchClassificationSimpleImpl">
         <property name="negativeWordFile" value="/opt/local/gate/negative_adj_list.txt"/>
         <property name="positiveWordFile" value="/opt/local/gate/positive_adj_list.txt"/>
-    </bean>
-    <!--bean id="simpleClassifierProcessor"
-          class="org.vento.sentiment.classification.processor.SentiBatchClassificationSimpleProcessor">
-        <property name="classifier" ref="simpleClassifier"/>
     </bean-->
 
-    <!-- gate experiment -->
     <gate:init gate-home="${gate.home}" user-config-file="${gate.userFile}"/>
 
     <gate:duplicate id="classificationApp">
@@ -85,8 +80,8 @@
         <property name="classifier" ref="gateProcessor" />
     </bean>
 
-    <bean id="experimentalClassifier"
-          class="org.vento.sentiment.classification.processor.SentiBatchExperimentalClassificationProcessor">
+    <bean id="gateClassificationProcessor"
+          class="org.vento.sentiment.classification.processor.SentiBatchClassificationProcessor">
 
         <property name="classificationWrapper" ref="classificationWrapper"/>
     </bean>

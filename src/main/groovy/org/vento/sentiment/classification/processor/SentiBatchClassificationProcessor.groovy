@@ -1,16 +1,16 @@
 package org.vento.sentiment.classification.processor
 
-import com.mongodb.DBObject;
-import org.apache.camel.Exchange;
+import com.mongodb.DBObject
+import gate.Annotation
+import gate.Document
+import gate.Factory
+import gate.util.DocumentProcessor
+import org.apache.camel.Exchange
 import org.apache.camel.Processor
-import org.vento.sentiment.SimpleBatchClassification;
-import org.vento.utility.VentoTypes;
+import org.vento.sentiment.classification.ClassificationWrapper
+import org.vento.utility.VentoTypes
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;import java.lang.*;import java.lang.Exception;import java.lang.Override;import java.lang.String;import java.lang.System;
-
+//import gate.creole.SerialAnalyserController
 /**
  * Created with IntelliJ IDEA.
  * User: lfoppiano
@@ -20,23 +20,26 @@ import java.io.IOException;import java.lang.*;import java.lang.Exception;import 
  */
 public class SentiBatchClassificationProcessor implements Processor {
 
-    private SimpleBatchClassification classifier;
+    private ClassificationWrapper classificationWrapper;
 
     @Override
     public void process(Exchange exchange) throws Exception {
 
-        DBObject twit = exchange.getIn().getBody(DBObject.class);
+        def result = 0.0
 
-        Double result = classifier.simpleClassify(twit.get("text"));
+        DBObject twit = exchange.getIn().getBody(DBObject.class)
 
-        twit.put("score", result.toString());
+        result = classificationWrapper.classify(twit.get("text"))
+
+        twit.put("score", result.toString())
         twit.put("type", VentoTypes.CLASSIFICATION)
 
-        exchange.getIn().setBody(twit);
+        exchange.getIn().setBody(twit)
+    }
+
+    void setClassificationWrapper(ClassificationWrapper classificationWrapper) {
+        this.classificationWrapper = classificationWrapper
     }
 
 
-    public void setClassifier(SimpleBatchClassification classifier) {
-        this.classifier = classifier;
-    }
 }
