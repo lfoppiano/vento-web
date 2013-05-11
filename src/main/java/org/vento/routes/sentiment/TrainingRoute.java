@@ -20,7 +20,7 @@ import org.vento.utility.VentoTypes;
  */
 public class TrainingRoute extends RouteBuilder {
 
-    private final int QUERY_FETCH_LIMIT = 3;
+    private final int QUERY_FETCH_LIMIT = 800;
     @EndpointInject(ref = "rejectLocation")
     private Endpoint rejectEndpoint;
     @EndpointInject(ref = "trainingTemp")
@@ -48,7 +48,7 @@ public class TrainingRoute extends RouteBuilder {
                 .setHeader(MongoDbConstants.LIMIT, constant(QUERY_FETCH_LIMIT))
                 .to(mongoConnector)
                 .split(body())
-                .log("${body.get(\"twitterId\")} - ${body.get(\"text\")} - ${body.get(\"score\")} - ${body.get(\"type\")} ")
+                //.log("${body.get(\"twitterId\")} - ${body.get(\"text\")} - ${body.get(\"score\")} - ${body.get(\"type\")} ")
                 .processRef("trainingDataPreprocessor")
                 .to(trainingTemp)
                 .setHeader("aggregationId", constant("bao"))

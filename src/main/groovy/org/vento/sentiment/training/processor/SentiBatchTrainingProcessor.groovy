@@ -17,7 +17,7 @@ import org.apache.commons.io.FileUtils
 class SentiBatchTrainingProcessor implements Processor{
 
     private CorpusController trainer
-    private File corpusDirectory
+    private URL corpusDirectory
 
     @Override
     public void process(Exchange exchange){
@@ -28,9 +28,13 @@ class SentiBatchTrainingProcessor implements Processor{
         trainer.execute()
     }
 
-
     public void setTrainer(CorpusController trainer) {
         this.trainer = trainer;
+    }
+
+
+    void setCorpusDirectory(URL corpusDirectory) {
+        this.corpusDirectory = corpusDirectory
     }
 
     /*
