@@ -1,0 +1,8 @@
+7299 #numTrainingDocs
+3 #numClasses
+0 #numNullLabelInstances
+18675 #totalFeatures
+/Users/Martin/IdeaProjects/gate-batch-learning/target/test-classes/vento-senti-brain/savedFiles/learnedModels.save #modelFile
+PAUM #learnerName
+null #learnerExecutable
+ -p 50 -n 1 -optB 0.0   #learnerParams
