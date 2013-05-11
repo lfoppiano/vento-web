@@ -44,7 +44,7 @@ public class ClassificationRoute extends RouteBuilder {
 
         from("seda:tmpClassify?concurrentConsumers=5")
                 .routeId("Classification sentiment classify")
-                .processRef("experimentalClassifier")
+                .processRef("gateClassificationProcessor")
                 .log("${body.get(\"twitterId\")} - ${body.get(\"text\")} - ${body.get(\"score\")}")
                 .to(mongoUpdateClassification);
 

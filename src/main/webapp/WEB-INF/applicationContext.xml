@@ -12,7 +12,7 @@
                   http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
                   http://gate.ac.uk/ns/spring http://gate.ac.uk/ns/spring.xsd">
 
-    <context:property-placeholder location="classpath:twitterCrawler.properties"/>
+    <context:property-placeholder location="classpath:vento-web.properties"/>
 
     <import resource="vento-beans.xml" />
     <import resource="vento-persistence.xml" />
