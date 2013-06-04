@@ -1,15 +1,9 @@
 package org.vento.sentiment.evaluation
 
-import com.mongodb.BasicDBObject
 import com.mongodb.DBObject
-import gate.Annotation
-import gate.Document
-import gate.util.DocumentProcessor
 import org.apache.camel.Exchange
 import org.apache.camel.Processor
-import org.vento.sentiment.SimpleBatchClassification
 import org.vento.sentiment.classification.ClassificationWrapper
-import org.vento.utility.VentoTypes;
 
 /**
  * Created with IntelliJ IDEA.
@@ -20,7 +14,7 @@ import org.vento.utility.VentoTypes;
  */
 public class VentoCalculationProcessor implements Processor {
 
-    ClassificationWrapper classifier
+    ClassificationWrapper classificationWrapper
 
     private observationMatrix = ['tp':0,'fp':0,'fn':0,'tn':0]
     private classValues = ["1.0":observationMatrix.clone(),"2.0":observationMatrix.clone(),"3.0":observationMatrix.clone()]
@@ -35,7 +29,7 @@ public class VentoCalculationProcessor implements Processor {
 
         twits.each{element->
 
-            result = classifier.classify(element.get("text"))
+            result = classificationWrapper.classify(element.get("text"))
 
             if (result.equals(element.get("score"))){
                 classValues[result]['tp']++
@@ -59,11 +53,11 @@ public class VentoCalculationProcessor implements Processor {
         }
 
         println("\nprecision: "+totalPrecision/3)
-        println("recall: "+totalRecall/3)
+        println("recall: "+totalRecall/3+"\n")
     }
 
 
-    public void setClassifier(ClassificationWrapper classifier) {
-        this.classifier = classifier;
+    public void setClassificationWrapper(ClassificationWrapper classifier) {
+        this.classificationWrapper = classifier;
     }
 }

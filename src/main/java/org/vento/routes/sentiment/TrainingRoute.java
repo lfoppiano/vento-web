@@ -55,7 +55,7 @@ public class TrainingRoute extends RouteBuilder {
                 .aggregate(header("aggregationId"), new TrainingQueueAggregationStrategy()).completionSize(trainingBatchLimit)
                 //.log("I have finished to aggregate 1000 elements! Run the training! ${body}")
                 //.processRef("gateTrainingProcessor")
-                .processRef("gateTrainingProcessor")
+                .processRef("trainingWrapperProcessor")
                 .log("Finish training! Updating stored data.")
                 .split().tokenize("\n")
                 .log("Processing ${body}")

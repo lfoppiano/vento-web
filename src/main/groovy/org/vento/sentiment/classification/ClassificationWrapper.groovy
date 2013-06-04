@@ -28,7 +28,7 @@ public class ClassificationWrapper {
         text = StringEscapeUtils.escapeXml(text)
         float result = 0.0f;
         try {
-            tmpDocument = Factory.newDocument(("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<twit>\n<text>" + text + "</text>\n</twit>"));
+            tmpDocument = Factory.newDocument(("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<twit>\n<text>" + text + "</text>\n</twit>"))
             classifier.processDocument(tmpDocument);
 
             Iterator<Annotation> classificationScoreStr = tmpDocument.getAnnotations("Output").get("Review").iterator()
