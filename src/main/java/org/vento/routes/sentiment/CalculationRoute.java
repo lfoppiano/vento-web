@@ -35,20 +35,12 @@ public class CalculationRoute extends RouteBuilder {
     @Override
     public void configure() throws Exception {
 
-        /*errorHandler(
-                deadLetterChannel(rejectEndpoint)
-                        .retryAttemptedLogLevel(LoggingLevel.WARN)
-        );*/
-
         from(mongoQueryTesting)
                 .routeId("Testing (calculation) route")
                 .convertBodyTo(String.class)
                 .setHeader(MongoDbConstants.LIMIT, constant(BATH_FETCH_LIMIT))
                 .to(mongoConnector)
-                //.split(body())
-                //.log("${body.get(\"twitterId\")} - ${body.get(\"text\")} - ${body.get(\"score\")} - ${body.get(\"type\")} ")
                 .setHeader("origin").simple("calculation")
                 .processRef("ventoCalculationProcessor");
-                //.to(mongoUpdateTesting);
     }
 }

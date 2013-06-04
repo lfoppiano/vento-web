@@ -44,6 +44,8 @@ public class VentoCalculationProcessor implements Processor {
 
         classValues.each {classLabel,observationMatrix->
 
+            println "class: ${classLabel} observation matrix: ${observationMatrix}"
+
             def tpFp = observationMatrix['tp']+observationMatrix['fp']
             def tpFn = observationMatrix['tp']+observationMatrix['fn']
 
