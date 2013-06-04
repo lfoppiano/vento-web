@@ -23,10 +23,6 @@ import twitter4j.Status
  * To change this template use File | Settings | File Templates.
  */
 public class TwitterLiveClassificationProcessor implements Processor {
-
-
-    //private ConditionalSerialAnalyserController classifier;
-
     private ClassificationWrapper classificationWrapper;
 
     @Override

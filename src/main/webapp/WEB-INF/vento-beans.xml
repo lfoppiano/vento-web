@@ -22,6 +22,11 @@
         <property name="classificationWrapper" ref="classificationWrapper" />
     </bean>
 
+    <bean id="freetextLiveClassificationProcessor"
+          class="org.vento.sentiment.classification.processor.FreeTextLiveClassificationProcessor">
+        <property name="classificationWrapper" ref="classificationWrapper" />
+    </bean>
+
 
     <!--bean id="gateEngineTesting" class="org.vento.semantic.sentiment.SentiBatchProcessingImpl">
         <constructor-arg name="gateHome" value="${gate.home}" />
