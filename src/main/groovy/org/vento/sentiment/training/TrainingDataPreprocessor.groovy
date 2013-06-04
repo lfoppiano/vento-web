@@ -1,4 +1,4 @@
-package org.vento.sentiment.training.processor
+package org.vento.sentiment.training
 
 import com.mongodb.DBObject
 import org.apache.camel.Exchange
