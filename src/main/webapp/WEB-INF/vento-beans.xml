@@ -13,7 +13,7 @@
     <!-- Twitter (pre)processors -->
     <bean id="twitterPreprocessor" class="org.vento.crawler.twitter.processor.TwitterPreprocessor"/>
     <bean id="twitter4jPreprocessor" class="org.vento.crawler.twitter.processor.Twitter4jPreprocessor"/>
-    <bean id="trainingDataPreprocessor" class="org.vento.sentiment.training.processor.TrainingDataPreprocessor"/>
+    <bean id="trainingDataPreprocessor" class="org.vento.sentiment.training.TrainingDataPreprocessor"/>
 
 
     <!-- Live classification -->
@@ -27,13 +27,7 @@
         <property name="classificationWrapper" ref="classificationWrapper" />
     </bean>
 
-
-    <!--bean id="gateEngineTesting" class="org.vento.semantic.sentiment.SentiBatchProcessingImpl">
-        <constructor-arg name="gateHome" value="${gate.home}" />
-        <constructor-arg name="projectConfigFile"  value="${gate.training}" />
-        <constructor-arg name="dataStoreDir" value="file:/tmp/twitter/tempTrainingStore" />
-        <constructor-arg name="corpusName" value="trainingCorpus" />
-    </bean-->
+    <!-- this part might not be necessary anymore  -->
 
     <bean id="gateEvaluationClassifier" class="org.vento.sentiment.gate.SentiBatchClassificationImpl" lazy-init="true">
         <property name="gateHome" value="${gate.home}"/>
@@ -45,30 +39,20 @@
         <property name="classifier" ref="gateEvaluationClassifier"/>
     </bean>
 
-    <!--bean id="gateTrainingProcessor" class="org.vento.sentiment.training.processor.SentiBatchTrainingProcessor"
-          lazy-init="true">
-        <property name="gateHome" value="${gate.home}"/>
-        <property name="projectConfigFile" value="${gate.training}"/>
-        <property name="dataStoreDir" value="${gate.training.datastore}"/>
-        <property name="corpusName" value="trainingCorpus"/>
-        <property name="corpusDirectory" value="${gate.training.corpusDirectory}"/>
-    </bean-->
-
 
     <!-- GATE spring setup -->
 
+    <gate:init gate-home="${gate.home}" user-config-file="${gate.userFile}"/>
 
-    <!-- training experiment -->
+    <!-- training -->
 
     <gate:saved-application location="${gate.training}" id="trainingApp"/>
-
-    <bean id="gateTrainingProcessor" class="org.vento.sentiment.training.processor.SentiBatchTrainingProcessor">
+    <bean id="trainingWrapperProcessor" class="org.vento.sentiment.training.processor.TrainingWrapperProcessor">
         <property name="trainer" ref="trainingApp"/>
         <property name="corpusDirectory" value="${gate.training.corpusDirectory}"/>
     </bean>
 
-    <!-- gate experiment -->
-    <gate:init gate-home="${gate.home}" user-config-file="${gate.userFile}"/>
+    <!-- classification -->
 
     <gate:duplicate id="classificationApp">
         <gate:saved-application location="${gate.classification}"/>
@@ -85,6 +69,13 @@
 
     <bean id="gateClassificationProcessor"
           class="org.vento.sentiment.classification.processor.SentiBatchClassificationProcessor">
+
+        <property name="classificationWrapper" ref="classificationWrapper"/>
+    </bean>
+
+    <!-- evaluation -->
+
+    <bean id="ventoCalculationProcessor" class="org.vento.sentiment.evaluation.VentoCalculationProcessor">
 
         <property name="classificationWrapper" ref="classificationWrapper"/>
     </bean>
