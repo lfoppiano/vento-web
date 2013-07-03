@@ -2,6 +2,10 @@ package org.vento.sentiment.calculation
 
 import com.mongodb.BasicDBObject
 import com.mongodb.DBObject
+import gate.Controller
+import gate.Gate
+import gate.util.DocumentProcessor
+import gate.util.persistence.PersistenceManager
 import org.apache.camel.CamelContext
 import org.apache.camel.Exchange
 import org.apache.camel.Message
@@ -11,6 +15,7 @@ import org.apache.camel.impl.DefaultMessage
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import org.vento.sentiment.classification.ClassificationWrapper
 import org.vento.sentiment.evaluation.VentoCalculationProcessor
 
 /**
@@ -22,16 +27,32 @@ import org.vento.sentiment.evaluation.VentoCalculationProcessor
  */
 public class VentoCalculationProcessorTest {
 
-    VentoCalculationProcessor target;
-    Exchange exchange;
+    VentoCalculationProcessor target
+    Exchange exchange
+    DocumentProcessor gateAppliction
 
     @Before
     public void setUp() throws Exception {
-        target = new VentoCalculationProcessor();
-
+        List<DBObject> twits = []
+        Message twitsArrayMessage = new DefaultMessage()
         CamelContext context = new DefaultCamelContext();
-        exchange = new DefaultExchange(context);
 
+        Gate.setGateHome(new File("E:/workspace-idea/vento-web/src/main/webapp/WEB-INF/gate-files/"))
+        Gate.init()
+
+        target = new VentoCalculationProcessor()
+        def tempWrapper = new ClassificationWrapper()
+        gateAppliction = PersistenceManager.loadObjectFromFile(new File("E:/workspace-idea/vento-web/src/main/webapp/WEB-INF/gate-files/gate-classification/batch-learning.classification.configuration.xml"))
+        tempWrapper.setClassifier(gateAppliction)
+        target.setClassificationWrapper(tempWrapper)
+        twits << new BasicDBObject(['text':'this is horrible','score':'1.0'])
+        twits << new BasicDBObject(['text':'I don\'t know','score':'2.0'])
+        twits << new BasicDBObject(['text':'this is the best','score':'3.0'])
+        twits << new BasicDBObject(['text':'I\'m so sad','score':'1.0'])
+        twits << new BasicDBObject(['text':'I\'mso happy','score':'3.0'])
+        twitsArrayMessage.setBody(twits)
+        exchange = new DefaultExchange(context);
+        exchange.setIn(twitsArrayMessage)
     }
 
     @After
@@ -41,10 +62,6 @@ public class VentoCalculationProcessorTest {
 
     @Test
     public void testVentoCalculation() throws Exception {
-        DBObject twit1 = new BasicDBObject(['text':'this is horrible','score':'1.0'])
-        DBObject twit2 = new BasicDBObject(['text':'I don\'t know','score':'2.0'])
-        DBObject twit3 = new BasicDBObject(['text':'this is the best','score':'3.0'])
-
+        target.process(exchange)
     }
 }
-

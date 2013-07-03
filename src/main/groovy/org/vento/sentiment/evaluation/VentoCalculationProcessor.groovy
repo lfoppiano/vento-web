@@ -16,8 +16,9 @@ public class VentoCalculationProcessor implements Processor {
 
     ClassificationWrapper classificationWrapper
 
-    private observationMatrix = ['tp':0,'fp':0,'fn':0,'tn':0]
-    private classValues = ["1.0":observationMatrix.clone(),"2.0":observationMatrix.clone(),"3.0":observationMatrix.clone()]
+    private confusionMatrix = ['tp':0,'fp':0,'fn':0,'tn':0]
+    private observationMap = [:] //"1.0":confusionMatrix.clone(),"2.0":confusionMatrix.clone(),"3.0":confusionMatrix.clone()
+    private domainClassLabels = '1.0,2.0,3.0'
     private totalPrecision = 0
     private totalRecall = 0
 
@@ -25,37 +26,59 @@ public class VentoCalculationProcessor implements Processor {
     public void process(Exchange exchange) throws Exception {
 
         List<DBObject> twits = exchange.getIn().getBody()
-        String result = ''
+        String predictedClass = ''
+        String observedClass = ''
+
+        domainClassLabels.split(',').each {
+            observationMap.put(it,confusionMatrix.clone())
+        }
 
         twits.each{element->
 
-            result = classificationWrapper.classify(element.get("text"))
+            predictedClass = classificationWrapper.classify(element.get("text"))
+            observedClass = element.get("score")
 
-            if (result.equals(element.get("score"))){
-                classValues[result]['tp']++
-                (classValues.keySet() - result).each {classValues[it]['tn']++}
+            if (predictedClass.equals(observedClass)){
+                observationMap[predictedClass]['tp']++
+                (observationMap.keySet() - predictedClass).each {observationMap[it]['tn']++}
             }
             else
             {
-                if (classValues.keySet().contains(result)) classValues[result]['fp']++
-                classValues[element.get("score")]['fn']++
+                if (observationMap.keySet().contains(predictedClass))
+                    observationMap[predictedClass]['fp']++
+                else
+                    println "no class label found !!!"
+
+                observationMap[observedClass]['fn']++
+                (observationMap.keySet() - predictedClass - observedClass).each {observationMap[it]['tn']++}
             }
         }
 
-        classValues.each {classLabel,observationMatrix->
+        observationMap.each {classLabel,observationMatrix->
+
+            def classPrecision = null
+            def classRecall = null
 
             println "class: ${classLabel} observation matrix: ${observationMatrix}"
 
             def tpFp = observationMatrix['tp']+observationMatrix['fp']
             def tpFn = observationMatrix['tp']+observationMatrix['fn']
 
-            if (tpFp!=0) totalPrecision=+observationMatrix['tp']/tpFp
-            if (tpFn!=0) totalRecall=+observationMatrix['tp']/tpFn
+            if (tpFp!=0) {
+                classPrecision = observationMatrix['tp']/tpFp
+                totalPrecision=+classPrecision
+            }
+            if (tpFn!=0) {
+                classRecall = observationMatrix['tp']/tpFn
+                totalRecall=+classRecall
+            }
 
+            println "\n class: ${classLabel}, precision = ${classPrecision}"
+            println "\n class: ${classLabel}, recall = ${classRecall}"
         }
 
-        println("\nprecision: "+totalPrecision/3)
-        println("recall: "+totalRecall/3+"\n")
+        println "\nprecision: "+totalPrecision/3
+        println "recall: "+totalRecall/3+"\n"
     }
 
 
