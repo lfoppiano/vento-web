@@ -39,6 +39,6 @@ public class TwitterPreprocessorTest {
 
         assert body.twits.size() == 15
         assert body.twits.get(0).twitterId == '123505817893863425'
-        assert body.twits.get(14).text == 'My better is better than your better Nike'
+        assert body.twits.get(14).text == '_USER_ My better is better than your better _TAG_ _LINK_'
     }
 }

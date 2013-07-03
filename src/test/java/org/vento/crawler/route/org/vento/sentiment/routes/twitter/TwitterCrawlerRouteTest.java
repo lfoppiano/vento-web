@@ -7,9 +7,12 @@ import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.test.junit4.CamelTestSupport;
+import org.junit.Ignore;
+import org.junit.Test;
 import org.vento.model.Twit;
 import org.vento.crawler.twitter.processor.TwitterPreprocessor;
 
+import java.io.InputStream;
 import java.util.UUID;
 
 public class TwitterCrawlerRouteTest extends CamelTestSupport {
@@ -26,8 +29,8 @@ public class TwitterCrawlerRouteTest extends CamelTestSupport {
     @EndpointInject(uri = "mock:output")
     protected MockEndpoint mockOutput;
 
-
-/*    @Test
+    @Ignore
+    @Test
     public void testTwitterMessageMassaging() throws Exception {
         InputStream body = getClass().getResourceAsStream("../processor/twitter-response-body.json");
         assertNotNull(body);
@@ -36,7 +39,7 @@ public class TwitterCrawlerRouteTest extends CamelTestSupport {
         templateTwitterResponse.sendBody(body);
 
         assertMockEndpointsSatisfied();
-    }*/
+    }
 
     @Override
     protected RouteBuilder createRouteBuilder() throws Exception {

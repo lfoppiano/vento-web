@@ -26,10 +26,10 @@ public class StringProcessor {
 
     public static String textProcessing(String text) {
         //Remove recipients
-        text = text.replaceAll(/@\w+(:)?/, '')
+        text = text.replaceAll(/@\w+(:)?/, '_USER_')
 
         //Remove hash of tags
-        text = text.replaceAll(/#/, '')
+        text = text.replaceAll(/#\w+/, '_TAG_')
 
         //Remove emoticons neutral
         //text = text.replaceAll(/[;:8](-)?[(P)}{D]/, '')
@@ -38,10 +38,10 @@ public class StringProcessor {
         text = text.replaceAll(/\s\s/, ' ')
 
         //Remove links/urls
-        text = text.replaceAll(/(via )?http:\/\/[a-zA-Z0-9\/-=.:]+/, '')
+        text = text.replaceAll(/(via )?http:\/\/[a-zA-Z0-9\/-=.:]+/, '_LINK_')
 
         //Remove retweets
-        text = text.replaceAll(/^?RT\s?:/, '')
+        text = text.replaceAll(/^?RT\s?:/, '_RETWEET_')
 
         //Remove invalid characters
         text = StringProcessor.removeInvalidUtf8Chars(text)
