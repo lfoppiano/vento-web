@@ -50,28 +50,31 @@ public class VentoCalculationProcessor implements Processor {
                 else {
                     println "no class label found !!!"
 
-                observationMap[observedClass]['fn']++
-                (observationMap.keySet() - predictedClass - observedClass).each {observationMap[it]['tn']++}
+                    observationMap[observedClass]['fn']++
+                    (observationMap.keySet() - predictedClass - observedClass).each {
+                        observationMap[it]['tn']++
+                    }
+                }
             }
         }
 
-        observationMap.each {classLabel,observationMatrix->
+        observationMap.each { classLabel, observationMatrix ->
 
             def classPrecision = null
             def classRecall = null
 
             println "class: ${classLabel} observation matrix: ${observationMatrix}"
 
-            def tpFp = observationMatrix['tp']+observationMatrix['fp']
-            def tpFn = observationMatrix['tp']+observationMatrix['fn']
+            def tpFp = observationMatrix['tp'] + observationMatrix['fp']
+            def tpFn = observationMatrix['tp'] + observationMatrix['fn']
 
-            if (tpFp!=0) {
-                classPrecision = observationMatrix['tp']/tpFp
-                totalPrecision=+classPrecision
+            if (tpFp != 0) {
+                classPrecision = observationMatrix['tp'] / tpFp
+                totalPrecision = +classPrecision
             }
-            if (tpFn!=0) {
-                classRecall = observationMatrix['tp']/tpFn
-                totalRecall=+classRecall
+            if (tpFn != 0) {
+                classRecall = observationMatrix['tp'] / tpFn
+                totalRecall = +classRecall
             }
 
             println "\n class: ${classLabel}, precision = ${classPrecision}"
