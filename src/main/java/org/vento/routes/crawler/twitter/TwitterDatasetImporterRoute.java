@@ -21,7 +21,7 @@ public class TwitterDatasetImporterRoute extends RouteBuilder {
 
     @EndpointInject(ref = "sourceFileImporter")
     private Endpoint sourceFileImporter;
-    @EndpointInject(ref = "mongoStorageSave")
+    @EndpointInject(ref = "mongoStorageSaveImport")
     private Endpoint dataStorage;
     @EndpointInject(ref = "rejectTwitterLocation")
     private Endpoint twitterRejectEndpoint;

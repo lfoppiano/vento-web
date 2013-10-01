@@ -29,7 +29,7 @@ public class TestingRoute extends RouteBuilder {
     @EndpointInject(ref = "mongoStorageSave")
     private Endpoint mongoUpdateTesting;
 
-    private final int BATH_FETCH_LIMIT = 10;
+    private final int BATH_FETCH_LIMIT = 200;
 
     @Override
     public void configure() throws Exception {

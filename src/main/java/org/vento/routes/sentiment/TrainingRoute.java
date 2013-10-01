@@ -20,7 +20,7 @@ import org.vento.utility.VentoTypes;
  */
 public class TrainingRoute extends RouteBuilder {
 
-    private final int QUERY_FETCH_LIMIT = 800;
+    private final int QUERY_FETCH_LIMIT = 1253;
     @EndpointInject(ref = "rejectLocation")
     private Endpoint rejectEndpoint;
     @EndpointInject(ref = "trainingTemp")
@@ -56,8 +56,8 @@ public class TrainingRoute extends RouteBuilder {
                 //.log("I have finished to aggregate 1000 elements! Run the training! ${body}")
                 //.processRef("gateTrainingProcessor")
                 .processRef("trainingWrapperProcessor")
-                .log("Finish training! Updating stored data.")
-                .split().tokenize("\n")
+                .log("Finish training! Updating stored data.");
+                /*.split().tokenize("\n")
                 .log("Processing ${body}")
                 .process(new Processor() {
                     @Override
@@ -76,7 +76,7 @@ public class TrainingRoute extends RouteBuilder {
                         inBody.put("type", VentoTypes.TRAINING_STORESET);
                     }
                 })
-                .to(storageTypeUpdate);
+                .to(storageTypeUpdate);*/
     }
 
     public void setTrainingBatchLimit(int trainingBatchLimit) {

@@ -57,6 +57,7 @@
         <!-- MONGODB Generic endpoints -->
         <endpoint id="mongoStorageFindAll" uri="mongodb:mongoDb?database=vento&amp;collection=reports&amp;operation=findAll" />
         <endpoint id="mongoStorageSave" uri="mongodb:mongoDb?database=vento&amp;collection=reports&amp;operation=save" />
+        <endpoint id="mongoStorageSaveImport" uri="mongodb:mongoDb?database=vento&amp;collection=reportsImport&amp;operation=save" />
 
         <!-- MONGODB Specific endpoints -->
         <endpoint id="mongoSearchHistorySave" uri="mongodb:mongoDb?database=vento&amp;collection=searches&amp;operation=save" />

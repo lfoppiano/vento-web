@@ -16,9 +16,9 @@ public class VentoCalculationProcessor implements Processor {
 
     ClassificationWrapper classificationWrapper
 
-    private confusionMatrix = ['tp':0,'fp':0,'fn':0,'tn':0]
+    private confusionMatrix = ['tp': 0, 'fp': 0, 'fn': 0, 'tn': 0]
     private observationMap = [:] //"1.0":confusionMatrix.clone(),"2.0":confusionMatrix.clone(),"3.0":confusionMatrix.clone()
-    private domainClassLabels = '1.0,2.0,3.0'
+    private domainClassLabels = '1.0,2.0'
     private totalPrecision = 0
     private totalRecall = 0
 
@@ -26,27 +26,28 @@ public class VentoCalculationProcessor implements Processor {
     public void process(Exchange exchange) throws Exception {
 
         List<DBObject> twits = exchange.getIn().getBody()
+
         String predictedClass = ''
         String observedClass = ''
 
         domainClassLabels.split(',').each {
-            observationMap.put(it,confusionMatrix.clone())
+            observationMap.put(it, confusionMatrix.clone())
         }
 
-        twits.each{element->
+        twits.each { element ->
 
-            predictedClass = classificationWrapper.classify(element.get("text"))
             observedClass = element.get("score")
+            predictedClass = classificationWrapper.classify(element.get("text"))
 
-            if (predictedClass.equals(observedClass)){
+            println("Observed: ${observedClass} vs Predicted: ${predictedClass}")
+
+            if (predictedClass.equals(observedClass)) {
                 observationMap[predictedClass]['tp']++
-                (observationMap.keySet() - predictedClass).each {observationMap[it]['tn']++}
-            }
-            else
-            {
+                (observationMap.keySet() - predictedClass).each { observationMap[it]['tn']++ }
+            } else {
                 if (observationMap.keySet().contains(predictedClass))
                     observationMap[predictedClass]['fp']++
-                else
+                else {
                     println "no class label found !!!"
 
                 observationMap[observedClass]['fn']++
@@ -77,8 +78,8 @@ public class VentoCalculationProcessor implements Processor {
             println "\n class: ${classLabel}, recall = ${classRecall}"
         }
 
-        println "\nprecision: "+totalPrecision/3
-        println "recall: "+totalRecall/3+"\n"
+        //println "\nprecision: "+totalPrecision/3
+        //println "recall: "+totalRecall/3+"\n"
     }
 
 

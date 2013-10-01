@@ -37,12 +37,10 @@ public class VentoCalculationProcessorTest {
         Message twitsArrayMessage = new DefaultMessage()
         CamelContext context = new DefaultCamelContext();
 
-        Gate.setGateHome(new File("E:/workspace-idea/vento-web/src/main/webapp/WEB-INF/gate-files/"))
-        Gate.init()
 
         target = new VentoCalculationProcessor()
         def tempWrapper = new ClassificationWrapper()
-        gateAppliction = PersistenceManager.loadObjectFromFile(new File("E:/workspace-idea/vento-web/src/main/webapp/WEB-INF/gate-files/gate-classification/batch-learning.classification.configuration.xml"))
+
         tempWrapper.setClassifier(gateAppliction)
         target.setClassificationWrapper(tempWrapper)
         twits << new BasicDBObject(['text':'this is horrible','score':'1.0'])
