@@ -14,6 +14,7 @@ import org.apache.camel.impl.DefaultExchange
 import org.apache.camel.impl.DefaultMessage
 import org.junit.After
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import org.vento.sentiment.classification.ClassificationWrapper
 import org.vento.sentiment.evaluation.VentoCalculationProcessor
@@ -58,6 +59,7 @@ public class VentoCalculationProcessorTest {
 
     }
 
+    @Ignore
     @Test
     public void testVentoCalculation() throws Exception {
         target.process(exchange)

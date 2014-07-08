@@ -1,0 +1,104 @@
+<xs:schema
+        xmlns:xs="http://www.w3.org/2001/XMLSchema"
+        xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+        jaxb:version="2.0"
+        xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+        jaxb:extensionBindingPrefixes="xjc"
+        elementFormDefault="unqualified"
+        version="2.0"
+        id="gate-model">
+
+    <xs:element name="GateDocument">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="GateDocumentFeatures">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Feature">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="Name">
+                                            <xs:complexType>
+                                                <xs:simpleContent>
+                                                    <xs:extension base="xs:string">
+                                                        <xs:attribute type="xs:string" name="className"/>
+                                                    </xs:extension>
+                                                </xs:simpleContent>
+                                            </xs:complexType>
+                                        </xs:element>
+                                        <xs:element name="Value">
+                                            <xs:complexType>
+                                                <xs:simpleContent>
+                                                    <xs:extension base="xs:string">
+                                                        <xs:attribute type="xs:string" name="className"/>
+                                                    </xs:extension>
+                                                </xs:simpleContent>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="TextWithNodes">
+                    <xs:complexType mixed="true">
+                        <xs:sequence>
+                            <xs:element name="Node" maxOccurs="unbounded" minOccurs="0">
+                                <xs:complexType>
+                                    <xs:simpleContent>
+                                        <xs:extension base="xs:string">
+                                            <xs:attribute type="xs:byte" name="id" use="optional"/>
+                                        </xs:extension>
+                                    </xs:simpleContent>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="AnnotationSet">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Annotation">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="Feature">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="Name">
+                                                        <xs:complexType>
+                                                            <xs:simpleContent>
+                                                                <xs:extension base="xs:string">
+                                                                    <xs:attribute type="xs:string" name="className"/>
+                                                                </xs:extension>
+                                                            </xs:simpleContent>
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                    <xs:element name="Value">
+                                                        <xs:complexType>
+                                                            <xs:simpleContent>
+                                                                <xs:extension base="xs:float">
+                                                                    <xs:attribute type="xs:string" name="className"/>
+                                                                </xs:extension>
+                                                            </xs:simpleContent>
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                    <xs:attribute type="xs:byte" name="Id"/>
+                                    <xs:attribute type="xs:string" name="Type"/>
+                                    <xs:attribute type="xs:byte" name="StartNode"/>
+                                    <xs:attribute type="xs:byte" name="EndNode"/>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                        <xs:attribute type="xs:string" name="Name"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute type="xs:byte" name="version"/>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

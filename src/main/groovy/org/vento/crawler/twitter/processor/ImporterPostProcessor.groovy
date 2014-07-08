@@ -18,21 +18,9 @@ class ImporterPostProcessor implements Processor {
         List<String> tweet = (List<String>) exchange.getIn().getBody()[0]
 
         Twit t = new Twit();
-//            t.twitterId = ""+tweet.id
-//            t.query = exchange.getIn().getHeader("query")
         t.text = tweet[1]
-//            t.createdAt = tweet.getCreatedAt()
-//            t.fromUser = tweet.getUser()
-//            t.source = tweet.getSource()
-//            t.geo = tweet.getGeoLocation()
         t.score = mapScoreValue(tweet[0])
         t.referenceScore = t.score
-        t.type = VentoTypes.TRAINING
-//            t = TwitHelper.analyzeAndCleanEmotions(t);
-        //t.setText(StringProcessor.textProcessing(t.getText()));
-
-//            ts.getTwits().add(t);
-
 
         exchange.getOut().setBody(t)
 

@@ -123,7 +123,7 @@ public class MultiClassLearning {
   /** Learn the models and write them into a set of files */
   public void training(final SupervisedLearner learner, File modelFile) {
     final int totalNumFeatures = dataFVinDoc.getTotalNumFeatures();
-    Set classesName = class2NumberInstances.keySet();
+    Set classesName = x.keySet();
     final ArrayList array1 = new ArrayList(classesName);
     LongCompactor c = new LongCompactor();
     Collections.sort(array1, c);

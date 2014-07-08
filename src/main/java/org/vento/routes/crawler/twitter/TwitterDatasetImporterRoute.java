@@ -37,8 +37,8 @@ public class TwitterDatasetImporterRoute extends RouteBuilder {
                 .routeId("Twitter CSV importer")
                 .split().tokenize("\n")
                 //.to("seda:importer")
-                .unmarshal().csv()
-                .to("mock:some")
+                //.unmarshal().csv()
+                //.to("mock:some")
                 .process(new ImporterPostProcessor())
                 .to(dataStorage);
 

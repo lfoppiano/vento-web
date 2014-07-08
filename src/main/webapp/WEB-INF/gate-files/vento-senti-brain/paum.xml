@@ -1,6 +1,6 @@
 <?xml version="1.0"?>  
 <ML-CONFIG>  
-  <VERBOSITY level="0"/>
+  <VERBOSITY level="2"/>
   <SURROUND value="false"/>
   <PARAMETER name="thresholdProbabilityClassification" 
 	     value="0.7"/> <!-- test with values 0.6, 0.7, 0.8 (0.9 or 1 might be too much) -->

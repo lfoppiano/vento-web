@@ -13,7 +13,7 @@
     <!-- Twitter (pre)processors -->
     <bean id="twitterPreprocessor" class="org.vento.crawler.twitter.processor.TwitterPreprocessor"/>
     <bean id="twitter4jPreprocessor" class="org.vento.crawler.twitter.processor.Twitter4jPreprocessor"/>
-    <bean id="trainingDataPreprocessor" class="org.vento.sentiment.training.TrainingDataPreprocessor"/>
+    <bean id="trainingDataPreprocessor" class="org.vento.sentiment.training.processor.TrainingDataPreprocessor"/>
 
 
     <!-- Live classification -->

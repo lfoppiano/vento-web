@@ -178,7 +178,6 @@
             <artifactId>gate-core</artifactId>
             <version>7.1</version>
         </dependency>
-
         <dependency>
             <groupId>org.twitter4j</groupId>
             <artifactId>twitter4j-core</artifactId>
